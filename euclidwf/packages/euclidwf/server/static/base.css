@@ -1,0 +1,264 @@
+/*                                                                           */
+/*  martin.melchior@fhnw.ch                                                  */
+/*                                                                           */
+
+body 		{ background:#ffffff; font-family: 'Arial'; font-size: '12pt'; margin: 0 }
+    
+#container 	{ background: #ffffff; max-width: 1200px; padding: .5em 4em 4em 4em;  margin-left: auto; margin-right: auto }
+
+#header 	{ position: relative; font-weight: bold; padding: 0; margin: 0; height: 5.0em }
+
+#header a 	{ text-decoration: none; color: #000000 }
+
+#main_nav 	{ position: relative; width: 100%; height: 3.2em }
+
+#site_title_container { position: relative; margin-bottom: 1em; padding: 0; border: 0px }
+
+#site_logo  { position: absolute; : 0em; left: 1em }
+
+#site_title_content { position: absolute; width: 100%; left: 80px; bottom: -2.5em }
+
+#site_title { float: left; font-size: 160%; padding: 0; position: absolute; bottom: 0 }
+
+#site_subtitle { float: left; font-size: 140%; position: absolute; bottom: 0; left: 20em }
+
+#navigationbar { position: absolute; bottom: 0em; right: 0em; font-size: 100%; font-weight: bold }
+
+#navigationbar .activesection { color: #f00000 }
+
+#navigationbar ul { list-style-type: none }
+
+#navigationbar li { float: right; margin: 0 1em 0 1em }
+
+#navigationbar a:hover { color: #f00000 }
+
+#menubar { width: 100%; margin: 0.7em 0 0 0; float: right; color: #f0f0f0; background:darkblue; 
+		   font-size: 80%; height: 2em; font-weight: bold }
+
+#menubar .activesection { color: #f00a0a }
+
+#menubar ul { list-style-type: none; margin: 0.5em 0 }
+
+#menubar li { float: left; margin: 0 2em 0 0 }
+
+#menu_status_info { margin: 0 1em; float: right; font-weight: normal }
+
+#menubar a:hover { color: #f00f0f }
+
+#menubar a { color: #ffffff }
+
+#content { padding: 1em; line-height: 1.2 }
+
+#content a { text-decoration: none; color: #000000 }
+
+#content a:link { color: black; text-decoration: underline }
+
+#content p { margin: 0.5em 0 }
+
+#content h1, h2, h3, h4, h5 { color: darkblue; margin: 1.2em 0 0 0 }
+
+#content h1 { font-size: 150%; }
+#content h2 { font-size: 120%; }
+#content h3 { font-size: 110%; }
+#content h4 { font-size: 100%; }
+
+#content strong { font-weight: bold }
+
+strong { font-weight: 100 }
+
+th { border: 1px solid black; background-color: lightgrey; padding: 5px; min-width: 45px; color: black; font-size: 80% }
+
+td { border-bottom: 1px solid lightgrey; border: 1px solid black; padding: 5px; font-size: 80% }
+
+.fixed-table-container { width: 100%; padding: 0em 0em 0em 0em;  margin-left: auto; margin-right: auto }
+
+.fixed-table-container-inner { overflow-x: hidden; overflow-y: auto; width: 100%; 
+							   padding: .5em 4em 4em 4em;  margin-left: auto; margin-right: auto }
+     
+.header-background { background-color: white; position: absolute; height: 30px; 
+					 border: 1px solid black; top: 0; right: 0; left: 0 }
+
+table {
+    border: 1px solid black;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.th-inner {
+    position: absolute;
+    top: 0;
+    line-height: 30px; /* height of header */
+    text-align: left;
+    border-left: 1px solid black;
+    padding-left: 5px;
+    margin-left: -2px;
+    min-width:45px
+}
+
+.th-normal {
+}
+.th-state {
+    width:45px
+}
+.th-comment {
+    width:50%
+}
+
+.th-small {
+    position: absolute;
+    top: 0;
+    line-height: 14px; /* height of header */
+    text-align: left;
+    border-left: 1px solid black;
+    padding: 2px;
+    margin-left: -2px;
+    width:45px;
+    font-size:11px;
+    word-wrap: break-all;
+    whitespace: normal}
+
+.run_details {
+    position:absolute;
+    padding:5px;
+    padding-bottom:20px;
+    background:white;
+    overflow-x:hidden;
+    border-style:none;    
+}
+
+.details {
+    border-style:none;    
+}
+.details_row {
+    border-style:none;
+}
+.details_left{
+    border-style:none;
+    width:250px;
+}
+.details_right{
+    border-style:none;
+}
+
+
+.status_EXECUTING{
+    color: #688A08;
+}
+.level_COMPLETED{
+    color: #AADD1C;
+}
+.level_CANCELLED{
+    color: #D8D8D8;
+}
+.level_FAILED{
+    color: #F8EC81;
+}
+
+.bglevel_COMPLETED{
+    background-color: #688A08;
+}
+.bglevel_EXECUTING{
+    background-color: #AADD1C;
+}
+.bglevel_CANCELLED{
+    background-color: #F8EC81;
+}
+.bglevel_FAILED{
+    background-color: #D8D8D8;
+}
+
+.shaded {
+    color: #a0a0a0;
+    float: right;
+    margin: 0 0 0 2em;
+}
+
+.icon {
+    margin: 0 1em 0 1em;
+}
+
+#figure {
+    width: 576pt;
+    position: relative;
+    padding: 3em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#footer {
+    margin: 2em;
+    padding: 1em 3em;
+}
+
+.fine-print {
+    color:#ccc;
+    font-weight:100;
+    text-align: center;
+}
+
+
+.hll { background-color: #ffffcc }
+.c { color: #999988; font-style: italic } /* Comment */
+.err { color: #a61717; background-color: #e3d2d2 } /* Error */
+.k { color: #000000; font-weight: bold } /* Keyword */
+.o { color: #000000; font-weight: bold } /* Operator */
+.cm { color: #999988; font-style: italic } /* Comment.Multiline */
+.cp { color: #999999; font-weight: bold; font-style: italic } /* Comment.Preproc */
+.c1 { color: #999988; font-style: italic } /* Comment.Single */
+.cs { color: #999999; font-weight: bold; font-style: italic } /* Comment.Special */
+.gd { color: #000000; background-color: #ffdddd } /* Generic.Deleted */
+.ge { color: #000000; font-style: italic } /* Generic.Emph */
+.gr { color: #aa0000 } /* Generic.Error */
+.gh { color: #999999 } /* Generic.Heading */
+.gi { color: #000000; background-color: #ddffdd } /* Generic.Inserted */
+.go { color: #888888 } /* Generic.Output */
+.gp { color: #555555 } /* Generic.Prompt */
+.gs { font-weight: bold } /* Generic.Strong */
+.gu { color: #aaaaaa } /* Generic.Subheading */
+.gt { color: #aa0000 } /* Generic.Traceback */
+.kc { color: #000000; font-weight: bold } /* Keyword.Constant */
+.kd { color: #000000; font-weight: bold } /* Keyword.Declaration */
+.kn { color: #000000; font-weight: bold } /* Keyword.Namespace */
+.kp { color: #000000; font-weight: bold } /* Keyword.Pseudo */
+.kr { color: #000000; font-weight: bold } /* Keyword.Reserved */
+.kt { color: #445588; font-weight: bold } /* Keyword.Type */
+.m { color: #009999 } /* Literal.Number */
+.s { color: #d01040 } /* Literal.String */
+.na { color: #008080 } /* Name.Attribute */
+.nb { color: #0086B3 } /* Name.Builtin */
+.nc { color: #445588; font-weight: bold } /* Name.Class */
+.no { color: #008080 } /* Name.Constant */
+.nd { color: #3c5d5d; font-weight: bold } /* Name.Decorator */
+.ni { color: #800080 } /* Name.Entity */
+.ne { color: #990000; font-weight: bold } /* Name.Exception */
+.nf { color: #990000; font-weight: bold } /* Name.Function */
+.nl { color: #990000; font-weight: bold } /* Name.Label */
+.nn { color: #555555 } /* Name.Namespace */
+.nt { color: #000080 } /* Name.Tag */
+.nv { color: #008080 } /* Name.Variable */
+.ow { color: #000000; font-weight: bold } /* Operator.Word */
+.w { color: #bbbbbb } /* Text.Whitespace */
+.mf { color: #009999 } /* Literal.Number.Float */
+.mh { color: #009999 } /* Literal.Number.Hex */
+.mi { color: #009999 } /* Literal.Number.Integer */
+.mo { color: #009999 } /* Literal.Number.Oct */
+.sb { color: #d01040 } /* Literal.String.Backtick */
+.sc { color: #d01040 } /* Literal.String.Char */
+.sd { color: #d01040 } /* Literal.String.Doc */
+.s2 { color: #d01040 } /* Literal.String.Double */
+.se { color: #d01040 } /* Literal.String.Escape */
+.sh { color: #d01040 } /* Literal.String.Heredoc */
+.si { color: #d01040 } /* Literal.String.Interpol */
+.sx { color: #d01040 } /* Literal.String.Other */
+.sr { color: #009926 } /* Literal.String.Regex */
+.s1 { color: #d01040 } /* Literal.String.Single */
+.ss { color: #990073 } /* Literal.String.Symbol */
+.bp { color: #999999 } /* Name.Builtin.Pseudo */
+.vc { color: #008080 } /* Name.Variable.Class */
+.vg { color: #008080 } /* Name.Variable.Global */
+.vi { color: #008080 } /* Name.Variable.Instance */
+.il { color: #009999 } /* Literal.Number.Integer.Long */
+
+

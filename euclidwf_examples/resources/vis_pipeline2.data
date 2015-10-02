@@ -1,0 +1,6 @@
+workdir=vis2
+logdir=logdir
+exposures=exposures.dat
+master_bias=master_bias.dat
+nonlin_model=nonlin.dat
+control_params=control_params.dat

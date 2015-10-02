@@ -1,0 +1,42 @@
+{% extends 'base_server.html' %}
+{% block menubar %}
+<ul><li><a>Details for Run with ID={{runid}}: Status {{status}} (submitted: {{ submitted }})</a></li></ul>
+{% endblock %}
+
+{% block content %}
+    <table class="details">
+        <tr class="details_row">
+            <td class="details_left">Pipeline Source File:</td>
+            <td class="details_right"><a href="/runs/{{runid}}/script">{{pipeline.name}}.py</a></td>
+        </tr>
+	</table>
+
+    <div class="fixed-table-container">
+    <h2>Tasks</h2>
+    <table cellspacing="0">
+	    <thead style='text-align:left'>
+		    <tr>
+		      {% for col in tasks.cols %}
+		          <th>{{col.name}}</th>
+		      {% endfor %}
+		    </tr>
+	    </thead>
+	    <tbody>
+	      {% for row in tasks.rows %}
+		    <tr>              
+		      <td>{{row.tick}}</td>
+		      <td>{{row.path}}</td>
+		      <td>{{row.pid}}</td>
+		      <td>{{row.status}}</td>
+		      <td>{{row.time}}</td>
+		      <td>{{row.workdir}}</td>
+		    </tr>
+	     {% endfor %}
+	    </tbody>
+    </table>
+    </div>
+    </p>
+    <h2>Dataflow Graph</h2>
+    
+    <img src={{ url_for('static',filename=graph_png) }} style="max-height: 2000px; max-width: 1200px; align: center"/>
+{% endblock%}

@@ -1,0 +1,12 @@
+workdir=vis
+logdir=logs
+illum_model=illum_model.dat
+scattered_light_model=scattered_light_model.dat
+master_dark=master_dark.dat
+cti_model=cti_model.dat
+control_params=control_params.dat
+nonlin_model=nonlin_model.dat
+master_illum=master_illum.dat
+master_bias=master_bias.dat
+master_flat=master_flat.dat
+exposures=exposures.dat

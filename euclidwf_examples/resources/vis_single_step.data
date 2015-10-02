@@ -1,0 +1,5 @@
+workdir=vis2
+logdir=logdir
+quadrant=exposures.dat
+master_dark=master_bias.dat
+control_params=control_params.dat

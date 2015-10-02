@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+
+<html>
+
+<head>
+    <title>{% block head_title %}Euclid Pipeline Run Server{% endblock %}</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href={{ url_for('static', filename = 'base.css') }}>
+
+    {% block extrahead %}{% endblock %}
+
+</head>
+
+<body>
+
+<!-- CONTAINER -->
+<div class="container" id="container">
+
+    <!-- SITE HEADER -->
+    <nav role="navigation">
+    <div id="header" >
+
+        <!-- TITLE -->
+        <div id='main_nav'>
+
+        <div id='site_title_container'>
+            <div id='site_logo'>    
+                {% block logo %}
+		            <img src={{ url_for('static', filename = 'logo_ec.png') }} width='40pt' height='40pt' alt="logo" border="0"/>
+	            {% endblock %}
+            </div>
+            <div id='site_title_content'>
+                <div id='site_title'>
+                    {% block site_title %}Euclid Consortium{% endblock %}
+                </div>
+                <div id='site_subtitle'>
+                    {% block site_subtitle %}Pipeline Run Server{% endblock %}
+                </div>
+            </div>
+        </div>
+        </a>
+
+        <!-- NAVIGATION -->
+        <div id="navigationbar">
+            <ul>
+            {% block navigationbar %}
+            {% endblock %}
+            </ul>
+        </div>
+
+        </div>
+
+        <!-- MENU -->
+        <div id="menubar">
+            <div id="menu">
+                <ul>
+                {% block menubar %}
+                {% endblock %}
+                </ul>
+            </div>
+            <div id="menu_status_info">
+                {% block menu_status_info %}####### // {{ now() }} {% endblock %}
+            </div>
+        </div>
+
+    </div>
+    </nav>
+
+    {% block precontent %}{% endblock %}
+
+    <div id="content"> <!-- used to load in PJAX -->
+        {% block content %}
+            Bla Bla ...
+        {% endblock %}
+    </div>
+
+    <!-- FOOTER -->
+    <div class="row" id="footer">
+        <p class="fine-print">
+            {% block footer %}site was created on {{ now() }}{% endblock %}
+            <span id="last-update"></span>
+        </p>
+    </div>
+
+</div>
+
+</body>
+
+</html>

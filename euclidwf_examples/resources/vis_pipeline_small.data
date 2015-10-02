@@ -1,0 +1,5 @@
+workdir=vis_small
+logdir=logdir
+exposures=exposures.dat
+master_bias=master_bias.dat
+control_params=control_params.dat

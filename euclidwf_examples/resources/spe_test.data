@@ -1,0 +1,10 @@
+workdir=spe_test
+logdir=logdir
+catalog_in=catalog.dat
+spectra_templates=spectra.dat
+dispersion_relation=dispersion.dat
+sensitivity_fct=sensitivity.dat
+exposure_time=exposure_time.dat
+bkgr_value=bkgr.dat
+galaxy_templates=galaxy.dat
+redshift_corr=redshift.dat

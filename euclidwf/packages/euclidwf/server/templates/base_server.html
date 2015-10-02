@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+<!-- HTML HEAD CONTENT **************************************************** -->
+
+{% block head_title %}Euclid Pipeline Run Server{% endblock %}
+{% block extrahead %}{% endblock %}
+
+
+
+<!-- HTML BODY ************************************************************ -->
+
+<!-- HEADER CONTENT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+<!-- TITLE -->
+{% block logo %}
+    <img src={{ url_for('static', filename = 'logo_ec.png') }} width='60pt' height='60pt' alt="logo" border="0"/>
+{% endblock %}
+{% block site_title %}Pipeline Run Server{% endblock %}
+{% block site_subtitle %}{% endblock %}
+
+<!-- NAVIGATION -->
+{% block navigationbar %}
+    <a href="/events"><li>Events</li></a>
+    <a href="/runs"><li>Runs</li></a>
+{% endblock %}
+
+<!-- MENUBAR -->
+{% block menubar %}
+{% endblock %}
+
+<!-- MENU STATUS INFO -->
+{% block menu_status_info %} #######  {{ now() }}{% endblock %}
+
+
+<!-- CONTAINER CONTENT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+{% block precontent %}{% endblock %}
+{% block content %}{% endblock %}

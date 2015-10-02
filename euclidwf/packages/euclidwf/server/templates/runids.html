@@ -1,0 +1,30 @@
+{% extends "base_server.html" %}
+{% block menubar %}
+<ul><li><a>Runs Ids</a></li></ul>
+{% endblock %}
+
+{% block content %}
+    <div class="fixed-table-container">
+    <table cellspacing="0">
+	    <thead style='text-align:left'>
+		    <tr>
+		      {% for col in table.cols %}
+		          <th><div>{{col.name}}</div></th>
+		      {% endfor %}
+		    </tr>
+	    </thead>
+	    <tbody>
+	      {% for row in table.rows %}
+		    <tr>              
+		      <td><a href="/runs/{{row.runid}}/details">{{row.runid}}</a></td>
+		      <td>{{row.status}}</td>
+		      <td>{{row.pipeline}}</td>
+		      <td>{{row.version}}</td>
+		      <td>{{row.submitted}}</td>
+		    </tr>
+	     {% endfor %}
+	    </tbody>
+    </table>
+    </div>   
+
+{% endblock %}
