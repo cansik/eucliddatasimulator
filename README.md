@@ -1,2 +1,8 @@
-# eucliddatasimulator
-IP5 Euclid Data Simulator
+# Euclid Data Simulator
+
+## Documentation
+```python
+print("bla")
+```
+
+*IP5 Project of Andreas Lüscher and Florian Bruggisser*
