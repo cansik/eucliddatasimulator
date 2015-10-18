@@ -5,6 +5,7 @@ Created on Mar 26, 2015
 
 
 from euclidwf.framework.workflow_dsl import pipeline
+from euclidwf.utilities import visualizer
 from vis import vis_correct_dark, vis_correct_flat
 
 @pipeline(outputs=('quadrant_flat_corr', 'hot_pixels_map', 'dead_pixels_map'))
@@ -23,4 +24,5 @@ def vis_two_steps(quadrant, master_dark, master_flat, control_params):
 
 if __name__ == '__main__':
     from euclidwf.framework.graph_builder import build_graph
-    print build_graph(vis_two_steps)
+    visualizer.visualize_graph(build_graph(vis_two_steps))
+

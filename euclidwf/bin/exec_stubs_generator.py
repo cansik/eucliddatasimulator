@@ -33,7 +33,7 @@ def parse_cmd_args():
 
 class TestExec(object):
     
-    def __init__(self, executable, package, attributes=None):
+    def __init__(self, executable, package, attributes=None, *params):
         self.executable = executable
         self.package = package
         self.attributes = attributes
@@ -175,6 +175,7 @@ def create_test_exec(executable, outputpath, testexec='TestExec'):
     command = executable.command
     inputnames = tuple(["%s" % _input.name for _input in executable.inputs])
     outputnames = tuple(["%s" % _output.name for _output in executable.outputs])
+    # todo: What is testexec?
     content = TEST_EXEC_TEMPLATE % ("'%s'" % command, "'%s'" % executable.pkgname, inputnames, outputnames, testexec)
     with open(outputpath, 'w') as outputfile:
         outputfile.write(content)
@@ -215,19 +216,31 @@ def copy_module(module_name, module_path, destdir):
 
 def check_output_for_list(_exec):
     list_outputs = filter(lambda o: o.content_type == TYPE_LISTFILE, _exec.outputs)
+
+    # todo: What does this line mean?
     if list_outputs and len(_exec.outputs) > 1:
-        raise ValueError("Not stub can be generated for executables that have more than one output \n" + 
+        raise ValueError("No stub can be generated for executables that have more than one output \n" +
                             " and one of the outputs is a list.")
     else:
         return len(list_outputs) > 0 
     
 
 def main():
+
+    # todo:
+    # destination dir vorbereiten (kopiere generatoren und dateien vom euclidwf)
+    # executables laden und parsen
+    # fuer jedes executable einen ordner machen
+    # erstelle test exec Datei
+
     args = parse_cmd_args()
     destdir = args.destdir
     executables = exec_loader.get_all_executables(args.pkgdefs)
     # Be aware that copy_modules_recursive will remove the destdir if it exists
+
+    # copy euclidwf source files to destination dir
     copy_modules_recursive(destdir, euclidwf, "*.pyc", ".svn")
+    # todo: Why all generators?
     copy_generators(destdir)
     for command, executable in executables.iteritems():
         execpath = os.path.join(destdir, command)            
