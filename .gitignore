@@ -2,3 +2,4 @@ euclidwf/.svn
 *.pyc
 euclidwf/packages/euclidwf/framework/.svn
 *.svn*
+euclid_stubs_generator/.idea
