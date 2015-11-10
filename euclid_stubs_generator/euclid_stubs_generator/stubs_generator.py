@@ -8,6 +8,7 @@ import pickle
 from jinja2 import Template
 
 from euclid_stubs_generator.ewf import exec_loader
+from euclid_stubs_generator.utils import mkdir_p
 
 __author__ = 'cansik'
 
@@ -42,10 +43,11 @@ class StubsGenerator(object):
         dest_dir = os.path.join(self.output_folder, 'bin')
 
         # clear bin folder
-        if os.path.exists(dest_dir):
-            shutil.rmtree(dest_dir)
+        if os.path.exists(self.output_folder):
+            shutil.rmtree(self.output_folder)
         else:
-            os.mkdir(dest_dir)
+            # create if tree does not exist yet
+            mkdir_p(self.output_folder)
 
         # copy executors to bin folder
         shutil.copytree(src_dir, dest_dir)
