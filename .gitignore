@@ -8,3 +8,4 @@ euclidwf/build
 euclidwf/packages
 euclidwf/dist
 euclid_stubs_generator/build
+euclid_stubs_generator/test_data

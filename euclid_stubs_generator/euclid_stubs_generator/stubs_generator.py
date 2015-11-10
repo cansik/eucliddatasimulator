@@ -1,6 +1,8 @@
 import os
 
 import shutil
+import stat
+
 from euclidwf.utilities import exec_loader
 from jinja2 import Template
 
@@ -19,6 +21,12 @@ class StubsGenerator(object):
         with open(template_path, 'r') as template_file:
             data = template_file.read()
             return Template(data)
+
+    @staticmethod
+    def __write_all_text(file_path, content):
+        with open(file_path, 'w') as outputfile:
+            outputfile.write(content)
+        os.chmod(file_path, stat.S_IRWXU)
 
     def __load_executables(self):
         # read all executables out of the files in the package defs
@@ -39,8 +47,15 @@ class StubsGenerator(object):
 
     def __generate_executable(self, command, executable):
         # generate new executable
-        print(command)
-        pass
+        exec_file = os.path.join(self.output_folder, '%s.py' % command)
+
+        # generate template
+        output = self.template.render(command='"%s"' % command,
+                                      input_files=map(lambda x: x.name, executable.inputs),
+                                      output_files=map(lambda x: x.name, executable.outputs))
+
+        # write output
+        self.__write_all_text(exec_file, output)
 
     def generate_stubs(self):
         self.__prepare_output_folder()
