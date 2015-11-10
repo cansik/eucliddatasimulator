@@ -5,7 +5,10 @@ Created on Apr 25, 2015
 '''
 # from euclidwf.framework.workflow_dsl import invoke_task
 import inspect
-from euclidwf.utilities.error_handling import PipelineSpecificationError
+# from euclidwf.utilities.error_handling import PipelineSpecificationError
+from euclid_stubs_generator.ewf.error_handling import \
+    PipelineSpecificationError
+
 
 class Package():
     def __init__(self, pkgname):
