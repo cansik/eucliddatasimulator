@@ -1,3 +1,6 @@
+import os
+
+import shutil
 from euclidwf.utilities import exec_loader
 from jinja2 import Template
 
@@ -22,8 +25,16 @@ class StubsGenerator(object):
         return executables
 
     def __prepare_output_folder(self):
-        # copy generators and euclidwf modules
-        pass
+        # copy executors and euclidwf modules
+        src_dir = os.path.join(os.path.dirname(__file__), 'executors')
+        dest_dir = os.path.join(self.output_folder, 'bin')
+
+        # clear bin folder
+        if os.path.exists(dest_dir):
+            shutil.rmtree(dest_dir)
+
+        # copy executors to bin folder
+        shutil.copytree(src_dir, dest_dir)
 
     def __generate_executable(self, command, executable):
         # generate new executable
@@ -34,5 +45,5 @@ class StubsGenerator(object):
         self.__prepare_output_folder()
 
         executables = self.__load_executables()
-        for command, executable in executables:
-            self.__generate_executable(command, executable)
+        # for command, executable in executables:
+        #     self.__generate_executable(command, executable)
