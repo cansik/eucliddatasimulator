@@ -3,6 +3,7 @@ import os
 import shutil
 import stat
 
+import pickle
 from euclidwf.utilities import exec_loader
 from jinja2 import Template
 
@@ -52,7 +53,9 @@ class StubsGenerator(object):
         # generate template
         output = self.template.render(command='"%s"' % command,
                                       input_files=map(lambda x: x.name, executable.inputs),
-                                      output_files=map(lambda x: x.name, executable.outputs))
+                                      output_files=map(lambda x: x.name, executable.outputs),
+                                      resources=repr(executable.resources),
+                                      executable=pickle.dumps(executable))
 
         # write output
         self.__write_all_text(exec_file, output)
