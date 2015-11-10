@@ -1,5 +1,4 @@
-# Euclid Data Simulator [![Build Status](https://travis-ci.org/cansik/eucliddatasimulator.svg)](https://travis-ci.org/cansik/eucliddatasimulator)
-[![Code Climate](https://codeclimate.com/github/cansik/eucliddatasimulator/badges/gpa.svg)](https://codeclimate.com/github/cansik/eucliddatasimulator)
+# Euclid Data Simulator [![Build Status](https://travis-ci.org/cansik/eucliddatasimulator.svg)](https://travis-ci.org/cansik/eucliddatasimulator)[![Code Climate](https://codeclimate.com/github/cansik/eucliddatasimulator/badges/gpa.svg)](https://codeclimate.com/github/cansik/eucliddatasimulator)
 
 ## Documentation
 ```python
