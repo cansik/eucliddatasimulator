@@ -1,4 +1,4 @@
-def _append_to_file(outfile, inputname, infile):
+def append_to_file(outfile, inputname, infile):
     outfile.write("    -------------------------------------\n")
     outfile.write("    Input (port: %s):\n" % inputname)
     outfile.write("    -------------------------------------\n")

@@ -11,11 +11,12 @@ class StubsGenerator(object):
     def __init__(self, package_definitions_directory, output_folder):
         self.package_definitions_directory = package_definitions_directory
         self.output_folder = output_folder
-        # self.template = self.__read_template()
+        self.template = self.__read_template()
 
     @staticmethod
     def __read_template():
-        with open('stubs_template.py', 'r') as template_file:
+        template_path = os.path.join(os.path.dirname(__file__), 'stubs_template.py')
+        with open(template_path, 'r') as template_file:
             data = template_file.read()
             return Template(data)
 
@@ -38,12 +39,13 @@ class StubsGenerator(object):
 
     def __generate_executable(self, command, executable):
         # generate new executable
-
+        print(command)
         pass
 
     def generate_stubs(self):
         self.__prepare_output_folder()
 
         executables = self.__load_executables()
-        # for command, executable in executables:
-        #     self.__generate_executable(command, executable)
+
+        for command, executable in executables.items():
+            self.__generate_executable(command, executable)

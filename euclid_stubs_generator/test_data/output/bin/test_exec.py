@@ -1,5 +1,7 @@
 import os
 
+from euclid_stubs_generator.executors.exec_utils import append_to_file
+
 
 class TestExec(object):
 
@@ -28,4 +30,4 @@ class TestExec(object):
                     for inputname, relinpath in inputs.iteritems():
                         absinpath = os.path.join(workdir, relinpath)
                         with open(absinpath, 'r') as infile:
-                            _append_to_file(outfile, inputname, infile)
+                            append_to_file(outfile, inputname, infile)
