@@ -4,8 +4,10 @@ import shutil
 import stat
 
 import pickle
-from euclidwf.utilities import exec_loader
+# from euclidwf.utilities import exec_loader
 from jinja2 import Template
+
+from euclid_stubs_generator.ewf import exec_loader
 
 __author__ = 'cansik'
 
@@ -42,6 +44,8 @@ class StubsGenerator(object):
         # clear bin folder
         if os.path.exists(dest_dir):
             shutil.rmtree(dest_dir)
+        else:
+            os.mkdir(dest_dir)
 
         # copy executors to bin folder
         shutil.copytree(src_dir, dest_dir)
