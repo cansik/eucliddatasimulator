@@ -3,7 +3,7 @@ Created on Apr 25, 2015
 
 @author: martin.melchior
 '''
-from euclidwf.framework.workflow_dsl import invoke_task
+# from euclidwf.framework.workflow_dsl import invoke_task
 import inspect
 from euclidwf.utilities.error_handling import PipelineSpecificationError
 
@@ -79,7 +79,8 @@ class Executable():
             inputnames=[inp.name for inp in self.inputs]
             outputnames=[out.name for out in self.outputs]
             props=TaskProperties(command=self.command, package=Package(self.pkgname))
-            return invoke_task(props, inputnames, outputnames, **kwargs)
+            # todo: does this cause any issue if commented out for the stubs?
+            # return invoke_task(props, inputnames, outputnames, **kwargs)
 
 
 def _pkgname():
