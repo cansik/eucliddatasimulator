@@ -17,7 +17,7 @@ install:
 # command to run tests
 script:
   # stubs generator
-  - "python euclid_stubs_generator/test/BasicTest.py"
+  - "python euclid_stubs_generator/test/basic_test.py"
 
 after_success:
 #  - coveralls
