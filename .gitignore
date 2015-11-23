@@ -3,3 +3,9 @@ euclidwf/.svn
 euclidwf/packages/euclidwf/framework/.svn
 *.svn*
 euclid_stubs_generator/.idea
+euclid_stubs_generator_ui/.idea
+euclidwf/build
+euclidwf/packages
+euclidwf/dist
+euclid_stubs_generator/build
+euclid_stubs_generator/test_data

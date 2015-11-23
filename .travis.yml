@@ -1,0 +1,26 @@
+notifications:
+  email: false
+language: python
+python:
+  - "2.7"
+#  - "3.4"
+#  - "3.5.0b3"
+#  - "3.5-dev"
+#  - "nightly"
+
+# command to install dependencies
+install:
+  - "pip install --upgrade pip"
+  - "pip install -r euclid_stubs_generator/requirements.txt"
+  - "pip install -r euclid_stubs_generator_ui/requirements.txt"
+  - "cd euclid_stubs_generator"
+  - "python setup.py install"
+
+# command to run tests
+script:
+  # stubs generator
+  - "cd test"
+  - "python basic_test.py"
+
+after_success:
+#  - coveralls
