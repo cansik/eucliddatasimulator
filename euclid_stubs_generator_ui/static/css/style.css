@@ -1,0 +1,21 @@
+.containertop {
+	padding-top: 15px;
+}
+
+.norowmargin {
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+.rowheader {
+	border-bottom: 2px solid #eee;
+	padding: 10px;
+}
+
+.rowbody {
+	padding: 10px;
+}
+
+.rowbody:nth-child(odd) {
+	background: #eee;
+}

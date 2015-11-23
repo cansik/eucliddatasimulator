@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic" rel="stylesheet" type="text/css">
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="static/css/bootstrap.min.css">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="static/css/bootstrap-theme.min.css">
+
+	<link rel="stylesheet" href="static/css/style.css">
+
+	<!-- CSS Fileupload -->
+	<link rel="stylesheet" href="static/css/fileinput.min.css">
+
+	<!-- CSS Timepicker -->
+	<link rel="stylesheet" type="text/css" media="screen"
+	href="static/css/bootstrap-datetimepicker.min.css">
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+	<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="static/js/bootstrap.min.js"></script>
+
+	<!-- JavaScript Fileupload -->
+	<script src="static/js/fileinput.min.js"></script>
+
+	<script type="text/javascript" src="static/js/jquery.mask.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+  			$('.time').mask('00:00:00');
+  		});
+	</script>
+
+</head>
+<body>
+	<div class="container containertop">
+		<div class="row">
+			<div class="col-xs-6 col-xs-offset-3 col-sm-4 col-sm-offset-4">
+				<img src="static/images/logo.jpg" class="img-responsive" alt="Responsive image">
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<div>
+					<label class="control-label">Datei ausw&auml;hlen</label>
+					<input id="input-1" type="file" class="file"> 
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container containertop">
+		<div class="row rowheader norowmargin">
+			<div class="col-xs-2"><strong>Executable Name</strong></div>
+			<div class="col-xs-2"><strong>Input Name</strong></div>
+			<div class="col-xs-2"><strong>Output Name</strong></div>
+			<div class="col-xs-2"><strong>CPU Cores</strong></div>
+			<div class="col-xs-2"><strong>RAM</strong></div>
+			<div class="col-xs-2"><strong>Wall Time</strong></div>
+		</div>
+
+		<div class="row rowbody norowmargin">
+			<div class="col-xs-2">Wyss Pipeline</div>
+			<div class="col-xs-2">C:/Daten/input.txt</div>
+			<div class="col-xs-2">C:/Daten/output.txt</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="">
+					<span class="input-group-addon" id="basic-addon1">Cores</span>
+				</div>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="">
+					<span class="input-group-addon" id="basic-addon1">MB</span>
+				</div>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group bootstrap-timepicker timepicker">
+				<input type="text" data-mask="00:00:00" class="form-control input-small time">
+					<span class="input-group-addon">
+						<i class="glyphicon glyphicon-time"></i>
+					</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="row rowbody norowmargin">
+			<div class="col-xs-2">Wyss Pipeline</div>
+			<div class="col-xs-2">C:/Daten/input.txt</div>
+			<div class="col-xs-2">C:/Daten/output.txt</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="">
+					<span class="input-group-addon" id="basic-addon1">Cores</span>
+				</div>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="">
+					<span class="input-group-addon" id="basic-addon1">MB</span>
+				</div>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group bootstrap-timepicker timepicker">
+				<input type="text" data-mask="00:00:00" class="form-control input-small time">
+					<span class="input-group-addon">
+						<i class="glyphicon glyphicon-time"></i>
+					</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="row rowbody norowmargin">
+			<div class="col-xs-2">Wyss Pipeline</div>
+			<div class="col-xs-2">C:/Daten/input.txt</div>
+			<div class="col-xs-2">C:/Daten/output.txt</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="">
+					<span class="input-group-addon" id="basic-addon1">Cores</span>
+				</div>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="">
+					<span class="input-group-addon" id="basic-addon1">MB</span>
+				</div>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group bootstrap-timepicker timepicker">
+				<input type="text" data-mask="00:00:00" class="form-control input-small time">
+					<span class="input-group-addon">
+						<i class="glyphicon glyphicon-time"></i>
+					</span>
+				</div>
+			</div>
+		</div>
+
+				<div class="row rowbody norowmargin">
+			<div class="col-xs-2">Wyss Pipeline</div>
+			<div class="col-xs-2">C:/Daten/input.txt</div>
+			<div class="col-xs-2">C:/Daten/output.txt</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="">
+					<span class="input-group-addon" id="basic-addon1">Cores</span>
+				</div>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="">
+					<span class="input-group-addon" id="basic-addon1">MB</span>
+				</div>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group bootstrap-timepicker timepicker">
+				<input type="text" data-mask="00:00:00" class="form-control input-small time">
+					<span class="input-group-addon">
+						<i class="glyphicon glyphicon-time"></i>
+					</span>
+				</div>
+			</div>
+		</div>
+
+				<div class="row rowbody norowmargin">
+			<div class="col-xs-2">Wyss Pipeline</div>
+			<div class="col-xs-2">C:/Daten/input.txt</div>
+			<div class="col-xs-2">C:/Daten/output.txt</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="">
+					<span class="input-group-addon" id="basic-addon1">Cores</span>
+				</div>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="">
+					<span class="input-group-addon" id="basic-addon1">MB</span>
+				</div>
+			</div>
+			<div class="col-xs-2">
+				<div class="input-group bootstrap-timepicker timepicker">
+				<input type="text" data-mask="00:00:00" class="form-control input-small time">
+					<span class="input-group-addon">
+						<i class="glyphicon glyphicon-time"></i>
+					</span>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="container containertop">
+		<button class="btn btn-lg btn-success col-xs-12" type="submit">Generate</button>
+	</div>
+
+</body>
+</html>

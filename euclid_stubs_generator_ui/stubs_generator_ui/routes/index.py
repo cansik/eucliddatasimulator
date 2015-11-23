@@ -7,8 +7,10 @@ __author__ = 'cansik'
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('euclid.html')
 
+def uploadFile(filename):
+    pass
 
 @socketio.on('my event', namespace='/test')
 def test_message(message):
