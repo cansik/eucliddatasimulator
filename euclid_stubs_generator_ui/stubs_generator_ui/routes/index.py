@@ -1,32 +1,18 @@
+from euclidwf.utilities import exec_loader
 from flask import render_template
 from flask.ext.socketio import emit
-from main import socketio, app
+from main import app
+import json
 
 __author__ = 'cansik'
 
+packageDefs = '/Users/cansik/git/fhnw/ip5/eucliddatasimulator/euclidwf_examples/packages/pkgdefs'
 
 @app.route('/')
 def index():
-    return render_template('euclid.html')
+    executables = exec_loader.get_all_executables(packageDefs)
+    return render_template('euclid.html', executables=executables.items())
+
 
 def uploadFile(filename):
     pass
-
-@socketio.on('my event', namespace='/test')
-def test_message(message):
-    emit('my response', {'data': message['data']})
-
-
-@socketio.on('my broadcast event', namespace='/test')
-def test_message(message):
-    emit('my response', {'data': message['data']}, broadcast=True)
-
-
-@socketio.on('connect', namespace='/test')
-def test_connect():
-    emit('my response', {'data': 'Connected'})
-
-
-@socketio.on('disconnect', namespace='/test')
-def test_disconnect():
-    print('Client disconnected')
