@@ -6,7 +6,7 @@ import json
 
 __author__ = 'cansik'
 
-packageDefs = '/Users/cansik/git/fhnw/ip5/eucliddatasimulator/euclidwf_examples/packages/pkgdefs'
+packageDefs = '../euclidwf_examples/packages/pkgdefs'
 
 @app.route('/')
 def index():
