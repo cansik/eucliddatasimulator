@@ -4,10 +4,9 @@ import shutil
 import stat
 
 import pickle
-# from euclidwf.utilities import exec_loader
+from euclidwf.utilities import exec_loader
 from jinja2 import Template
 
-from euclid_stubs_generator.ewf import exec_loader
 from euclid_stubs_generator.utils import mkdir_p
 
 __author__ = 'cansik'
@@ -57,11 +56,7 @@ class StubsGenerator(object):
         exec_file = os.path.join(self.output_folder, '%s.py' % command)
 
         # generate template
-        output = self.template.render(command='"%s"' % command,
-                                      input_files=map(lambda x: x.name, executable.inputs),
-                                      output_files=map(lambda x: x.name, executable.outputs),
-                                      resources=repr(executable.resources),
-                                      executable=pickle.dumps(executable))
+        output = self.template.render(executable=pickle.dumps(executable))
 
         # write output
         self.__write_all_text(exec_file, output)
