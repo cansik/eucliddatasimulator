@@ -1,11 +1,13 @@
 import os
 
+from euclid_stubs_generator.stubs_generator import StubsGenerator
 from euclidwf.framework.graph_builder import build_graph
 from euclidwf.utilities import exec_loader
 from flask import render_template, request, url_for, Flask, send_from_directory
 from werkzeug.utils import secure_filename, redirect
 
 import config
+from controller.index_controller import IndexController
 from main import app
 import json
 
@@ -17,6 +19,8 @@ packageDefs = '../euclidwf_examples/packages/pkgdefs'
 app.config['UPLOAD_FOLDER'] = 'uploads/'
 # These are the extension that we are accepting to be uploaded
 app.config['ALLOWED_EXTENSIONS'] = set(['py','txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+controller = IndexController()
 
 @app.route('/')
 def index():
@@ -59,28 +63,10 @@ def uploaded_file(filename):
     file_path = os.path.join(app.config['UPLOAD_FOLDER'],filename)
     print(os.path.abspath(file_path))
 
-    # load
-    pipeline_globals = {}
-    pipeline_locals = {}
-    execfile(file_path)
+    pydron_graph = controller.build_graph_from_file(file_path)
+    files = controller.get_all_start_inputs_from_graph(pydron_graph)
 
-    pipeline2 = None
-    pipeline_found = False
-
-    keys = locals().keys()
-    for k in keys:
-        var = locals().get(k)
-        globals().update({k:var})
-        if hasattr(var, '__call__') and hasattr(var,'ispipeline') and not pipeline_found:
-            pipeline_found = True
-            pipeline2 = var
-
-    assert getattr(pipeline2,'ispipeline')
-    assert pipeline2 is not None
-
-    pydron_graph = build_graph(pipeline2)
-
-    return render_template("euclid.html", executables=executables.items())
+    return render_template("euclid.html", files = files, executables=executables.items())
 
 @app.route('/generate')
 def generate():
