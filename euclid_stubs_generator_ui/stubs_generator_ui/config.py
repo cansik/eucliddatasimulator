@@ -6,3 +6,4 @@ ESG_SERVER_TEMPLATE_FOLDER = './../templates'
 ESG_SERVER_STATIC_PATH = '/static'
 
 ESG_SERVER_DEBUG_MODE = True
+#ESG_UPLOADEDFILEPATH = '/Users/Andreas/Projects/temp'

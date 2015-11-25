@@ -45,51 +45,16 @@
 				<img src="/static/images/logo.jpg" class="img-responsive" alt="Responsive image">
 			</div>
 		</div>
-	</div>
-
-	<div class="container containertop">
-		<div class="row rowheader norowmargin">
-			<div class="col-xs-2"><strong>Executable Name</strong></div>
-			<div class="col-xs-2"><strong>Input Name</strong></div>
-			<div class="col-xs-2"><strong>Output Name</strong></div>
-			<div class="col-xs-2"><strong>CPU Cores</strong></div>
-			<div class="col-xs-2"><strong>RAM</strong></div>
-			<div class="col-xs-2"><strong>Wall Time</strong></div>
-		</div>
-
-		{% for command, exec in executables %}
-		<div class="row rowbody norowmargin">
-			<div class="col-xs-2">{{ command }}</div>
-			<div class="col-xs-2">N/A</div>
-			<div class="col-xs-2">N/A</div>
-			<div class="col-xs-2">
-				<div class="input-group">
-					<input type="text" class="form-control" value="{{ exec.resources.cores }}" placeholder="">
-					<span class="input-group-addon" id="basic-addon1">Cores</span>
+		<form action="/upload" method="post" enctype="multipart/form-data">
+			<div class="row">
+				<div class="col-xs-12">
+					<div>
+						<label class="control-label">Datei ausw&auml;hlen</label>
+						<input id="input-1" name="file" type="file" class="file">
+					</div>
 				</div>
 			</div>
-			<div class="col-xs-2">
-				<div class="input-group">
-					<input type="text" class="form-control" value="{{ exec.resources.ram }}" placeholder="">
-					<span class="input-group-addon" id="basic-addon1">MB</span>
-				</div>
-			</div>
-			<div class="col-xs-2">
-				<div class="input-group bootstrap-timepicker timepicker">
-				<input type="text" data-mask="00:00:00" class="form-control input-small time" value="{{ exec.resources.walltime }}">
-					<span class="input-group-addon">
-						<i class="glyphicon glyphicon-time"></i>
-					</span>
-				</div>
-			</div>
-		</div>
-
-    	{% endfor %}
+		</form>
 	</div>
-
-	<div class="container containertop">
-		<button class="btn btn-lg btn-success col-xs-12" type="submit">Generate</button>
-	</div>
-
 </body>
 </html>
