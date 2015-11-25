@@ -1,39 +1,104 @@
+import os
 import pickle
 import random
 import math
 from multiprocessing import Process
 from time import sleep
 
+import argparse
+import uuid
+
 __author__ = 'cansik'
 
 command = ''
-input_files = []
-output_files = []
+input_names = []
+output_names = []
 resources = None
 executable = None
 
+inputs = {}
+outputs = {}
+
+workdir = ''
+
 
 def read_data():
-    global command, input_files, output_files, resources, executable
+    global command, input_names, output_names, resources, executable
     executable = pickle.loads("""{{executable}}""")
 
     # link vars
     command = executable.command
-    input_files = map(lambda x: x.name, executable.inputs)
-    output_files = map(lambda x: x.name, executable.outputs)
+    input_names = map(lambda x: x.name, executable.inputs)
+    output_names = map(lambda x: x.name, executable.outputs)
     resources = executable.resources
 
 
 def print_info():
     print('Name: %s' % command)
-    print('In: %s' % ', '.join(input_files))
-    print('Out: %s' % ', '.join(output_files))
+    print('In: %s' % ', '.join(input_names))
+    print('Out: %s' % ', '.join(output_names))
     print('Resources: %s' % executable.resources)
 
 
 def workload_run():
     r = RessourceUser()
-    r.use_cpu(resources.cores, int(resources.walltime*60))
+    r.use_cpu(resources.cores, int(resources.walltime * 60))
+
+
+def read_input_files():
+    pass
+
+
+def write_output_files():
+    for output_name, reloutpath in outputs.items():
+        productid = create_product_id(output_name)
+        filename = create_file_name()
+        absoutpath = os.path.join(workdir, reloutpath)
+        parentdir = os.path.dirname(absoutpath)
+
+        if not os.path.exists(parentdir):
+            os.makedirs(parentdir)
+
+        # write xml
+        with open(absoutpath, 'w') as outfile:
+            outfile.write(META_DATA_XML % (productid, filename))
+
+        # write data file
+        datadir = os.path.join(workdir, 'data')
+
+        if not os.path.exists(datadir):
+            os.makedirs(datadir)
+
+        datadir = os.path.join(datadir, filename)
+
+        with open(datadir, 'w') as outfile:
+            outfile.write('HELLO WORLD FROM %s' % output_name)
+            for inputname, relinpath in inputs.iteritems():
+                outfile.write("    (%s,%s)\n" % (inputname, relinpath))
+
+
+def create_product_id(outputname):
+    return "P_" + outputname + "_" + str(uuid.uuid4())
+
+
+def create_file_name():
+    return "FN_" + command + "_" + str(uuid.uuid4())
+
+
+def parse_cmd_args():
+    parser = argparse.ArgumentParser(
+        description="Test Stub for Executable %s." % command)
+    parser.add_argument("--workdir", help="Workdir.", default=".")
+    parser.add_argument("--logdir", help="Logdir.", default="./logdir")
+
+    for inputname in input_names:
+        parser.add_argument("--%s" % inputname,
+                            help="Relative path to input (%s) to tester." % inputname)
+    for outputname in output_names:
+        parser.add_argument("--%s" % outputname,
+                            help="relative path to output (%s) to tester." % outputname)
+
+    return parser.parse_args()
 
 
 class RessourceUser(object):
@@ -69,7 +134,7 @@ class RessourceUser(object):
 
         print self.utf8len(s)
         print "Created a string with: " + (
-        self.utf8len(s) / 131072).__str__() + " Mb!"
+            self.utf8len(s) / 131072).__str__() + " Mb!"
 
     def use_m(self, memory, seconds):
         print("Starting RAM")
@@ -90,7 +155,35 @@ class RessourceUser(object):
                 i = r + r
 
 
+META_DATA_XML = """<?xml version="1.0" encoding="UTF-8"?>
+<TestDataFiles>
+    <Id>%s</Id>
+    <Files>
+        <DataContainer filestatus='COMMITTED'>
+            <FileName>%s</FileName>
+        </DataContainer>
+    </Files>
+</TestDataFiles>"""
+
 if __name__ == '__main__':
     read_data()
+    args = parse_cmd_args()
+
+    inputs = {value: getattr(args, value) for value in input_names}
+    outputs = {value: getattr(args, value) for value in output_names}
+
+    workdir = args.workdir
+
     print_info()
-    workload_run()
+
+    # test
+    print("reading files...")
+    read_input_files()
+
+    print("startig workload test...")
+    # workload_run()
+
+    print("writing output files...")
+    write_output_files()
+
+    print("finished!")
