@@ -13,8 +13,7 @@ __author__ = 'cansik'
 
 
 class StubsGenerator(object):
-    def __init__(self, package_definitions_directory, output_folder):
-        self.package_definitions_directory = package_definitions_directory
+    def __init__(self, output_folder):
         self.output_folder = output_folder
         self.template = self.__read_template()
 
@@ -31,9 +30,9 @@ class StubsGenerator(object):
             outputfile.write(content)
         os.chmod(file_path, stat.S_IRWXU)
 
-    def __load_executables(self):
+    def __load_executables(self, package_definitions_directory):
         # read all executables out of the files in the package defs
-        executables = exec_loader.get_all_executables(self.package_definitions_directory)
+        executables = exec_loader.get_all_executables(package_definitions_directory)
         return executables
 
     def __prepare_output_folder(self):
@@ -61,10 +60,13 @@ class StubsGenerator(object):
         # write output
         self.__write_all_text(exec_file, output)
 
-    def generate_stubs(self):
-        self.__prepare_output_folder()
+    def generate_stubs_from_folder(self, package_definitions_directory):
+        executables = self.__load_executables(package_definitions_directory)
+        self.generate_stubs(executables)
 
-        executables = self.__load_executables()
+    def generate_stubs(self, executables):
+        self.__prepare_output_folder()
 
         for command, executable in executables.items():
             self.__generate_executable(command, executable)
+

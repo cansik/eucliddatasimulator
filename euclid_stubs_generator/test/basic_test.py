@@ -12,15 +12,14 @@ class BasicTest(unittest.TestCase):
         print(self.input_folder)
         print(self.output_folder)
 
-        self.generator = StubsGenerator(self.input_folder, self.output_folder)
+        self.generator = StubsGenerator(self.output_folder)
 
     def tearDown(self):
         # cleanup
         pass
 
-    def test_simple_run(self):
-        self.generator.generate_stubs()
-
+    def test_generate_stubs(self):
+        self.generator.generate_stubs_from_folder(self.input_folder)
 
 if __name__ == '__main__':
     unittest.main()

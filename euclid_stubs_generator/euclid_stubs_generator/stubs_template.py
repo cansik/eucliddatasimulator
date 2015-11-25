@@ -46,6 +46,8 @@ def workload_run():
 
 
 def read_input_files():
+    for input_name, relinpath in inputs.items():
+        pass
     pass
 
 
