@@ -11,6 +11,7 @@ app = Flask(__name__,
 app.config['SECRET_KEY'] = 'secret!'
 CORS(app)
 cache = Cache(app, config={'CACHE_TYPE': 'simple'})
+cache.init_app(app)
 
 # import routes
 import routes.index
