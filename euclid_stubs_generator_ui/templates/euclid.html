@@ -92,7 +92,7 @@
             <div class="col-xs-2">{{ command }}</div>
             <div class="col-xs-2">N/A</div>
             <div class="col-xs-2">
-                <button id="{{command}}_button" class="btn btn-lg btn-link col-xs-12" type="button">Show</button>
+                <a id="{{command}}_button" class="col-xs-12" href="#" type="button">Show</a>
             </div>
 
             <div class="col-xs-2">
@@ -130,6 +130,7 @@
                         <span class="input-group-addon" id="basic-addon1">{{ file.name }}</span>
                         <input type="text" name="{{command}}_{{ file.name }}_size" class="form-control"
                                value="50" placeholder="">
+                        <span class="input-group-addon" id="basic-addon1">MB</span>
                     </div>
                 </div>
 
