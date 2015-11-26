@@ -80,7 +80,7 @@ def read_input_files():
 def write_output_files():
     for output_name, rel_path in outputs.items():
         product_id = create_product_id(output_name)
-        filename = create_file_name()
+        filename = create_file_name(command)
         absolute_path = os.path.join(workdir, rel_path)
         parent_dir = os.path.dirname(absolute_path)
 
@@ -100,7 +100,7 @@ def write_output_files():
         data_dir = os.path.join(data_dir, filename)
 
         with open(data_dir, 'w') as outfile:
-            outfile.write('HELLO WORLD FROM %s' % output_name)
+            outfile.write('HALLO VATTER! %s' % output_name)
             for input_name, rel_input_path in inputs.iteritems():
                 outfile.write("    (%s,%s)\n" % (input_name, rel_input_path))
 
@@ -109,8 +109,8 @@ def create_product_id(output_name):
     return "P_" + output_name + "_" + str(uuid.uuid4())
 
 
-def create_file_name():
-    return "FN_" + command + "_" + str(uuid.uuid4())
+def create_file_name(output_name):
+    return "FN_" + output_name + "_" + str(uuid.uuid4())
 
 
 def parse_cmd_args():

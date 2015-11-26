@@ -12,7 +12,7 @@ from euclid_stubs_generator.utils import mkdir_p
 __author__ = 'cansik'
 
 
-class StubsGenerator(object):
+class StubsGenerator:
     def __init__(self, output_folder):
         self.output_folder = output_folder
         self.template = self.__read_template()

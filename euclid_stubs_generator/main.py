@@ -1,15 +1,21 @@
 import os
 import argparse
+
+from euclid_stubs_generator.mock_generator import MockGenerator
 from euclid_stubs_generator.stubs_generator import StubsGenerator
 
 __author__ = 'cansik'
 
 
 def parse_cmd_args():
-    parser = argparse.ArgumentParser(description="Utility generating test stubs for executables.")
-    parser.add_argument("--pkgdefs", help="Path to folder that contains the package definitions (package repository).")
-    parser.add_argument("--destdir", help="Directory to write the test stubs to.")
-    parser.add_argument("--xml", dest='xml', action='store_true', help="Specify flag to generate xml output (otherwise text is produced; note that lists are always pickled).")
+    parser = argparse.ArgumentParser(
+        description="Utility generating test stubs for executables.")
+    parser.add_argument("--pkgdefs",
+                        help="Path to folder that contains the package definitions (package repository).")
+    parser.add_argument("--destdir",
+                        help="Directory to write the test stubs to.")
+    parser.add_argument("--xml", dest='xml', action='store_true',
+                        help="Specify flag to generate xml output (otherwise text is produced; note that lists are always pickled).")
     args = parser.parse_args()
     args.pkgdefs = os.path.expandvars(args.pkgdefs)
     args.destdir = os.path.expandvars(args.destdir)
@@ -22,6 +28,10 @@ def main():
 
     generator = StubsGenerator(args.destdir)
     generator.generate_stubs_from_folder(args.pkgdefs)
+
+    mock_output = os.path.join(args.destdir, 'mock')
+    mocker = MockGenerator(mock_output)
+    mocker.generate_mocks({'vis_split': 50, 'vis_combine': 100})
 
 
 if __name__ == '__main__':
