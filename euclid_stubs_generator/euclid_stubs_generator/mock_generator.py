@@ -8,7 +8,7 @@ from euclid_stubs_generator.utils import mkdir_p
 class MockGenerator:
     __DATA_DIR = 'data'
     __WORK_DIR = 'workdir'
-    __EXTENSION = '.dat'
+    __EXTENSION = '.data'
 
     def __init__(self, output_folder):
         self.output_folder = output_folder
@@ -30,7 +30,7 @@ class MockGenerator:
 
         # create xml
         with open(xml_path, 'w') as outfile:
-            outfile.write(META_DATA_XML % (product_id, data_file_name))
+            outfile.write(META_DATA_XML % (product_id, data_file_name + self.__EXTENSION))
 
         # data file
         with open(data_path, 'wb') as outfile:

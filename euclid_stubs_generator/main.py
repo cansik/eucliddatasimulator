@@ -1,5 +1,6 @@
 import os
 import argparse
+from euclidwf.utilities import exec_loader
 
 from euclid_stubs_generator.mock_generator import MockGenerator
 from euclid_stubs_generator.stubs_generator import StubsGenerator
@@ -27,7 +28,16 @@ def main():
     args = parse_cmd_args()
 
     generator = StubsGenerator(args.destdir)
-    generator.generate_stubs_from_folder(args.pkgdefs)
+
+    executables = exec_loader.get_all_executables(args.pkgdefs)
+
+    test_pipeline_name = 'vis_split_quadrants'
+
+    executables = dict({(k, v) for k, v in executables.items() if
+                   k == test_pipeline_name})
+
+    generator.generate_stubs(executables,
+                             {test_pipeline_name: {'quadrants_list': 20}})
 
     mock_output = os.path.join(args.destdir, 'mock')
     mocker = MockGenerator(mock_output)

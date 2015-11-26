@@ -22,6 +22,8 @@ executable = None
 inputs = {}
 outputs = {}
 
+output_infos = {}
+
 junk_files = []
 
 workdir = ''
@@ -29,8 +31,9 @@ file_data_dir = 'data'
 
 
 def read_data():
-    global command, input_names, output_names, resources, executable
+    global command, input_names, output_names, resources, executable, output_infos
     executable = pickle.loads("""{{executable}}""")
+    output_infos = pickle.loads("""{{output_infos}}""")
 
     # link vars
     command = executable.command
@@ -84,6 +87,8 @@ def write_output_files():
         absolute_path = os.path.join(workdir, rel_path)
         parent_dir = os.path.dirname(absolute_path)
 
+        file_size = output_infos[output_name]
+
         if not os.path.exists(parent_dir):
             os.makedirs(parent_dir)
 
@@ -99,10 +104,8 @@ def write_output_files():
 
         data_dir = os.path.join(data_dir, filename)
 
-        with open(data_dir, 'w') as outfile:
-            outfile.write('HALLO VATTER! %s' % output_name)
-            for input_name, rel_input_path in inputs.iteritems():
-                outfile.write("    (%s,%s)\n" % (input_name, rel_input_path))
+        with open(data_dir, 'wb') as outfile:
+            outfile.write(bytearray(file_size * 1000 * 1000))
 
 
 def create_product_id(output_name):

@@ -50,22 +50,23 @@ class StubsGenerator:
         # copy executors to bin folder
         shutil.copytree(src_dir, dest_dir)
 
-    def __generate_executable(self, command, executable):
+    def __generate_executable(self, command, executable, output_infos):
         # generate new executable
         exec_file = os.path.join(self.output_folder, '%s.py' % command)
 
         # generate template
-        output = self.template.render(executable=pickle.dumps(executable))
+        output = self.template.render(executable=pickle.dumps(executable),
+                                      output_infos=pickle.dumps(output_infos))
 
         # write output
         self.__write_all_text(exec_file, output)
 
     def generate_stubs_from_folder(self, package_definitions_directory):
         executables = self.__load_executables(package_definitions_directory)
-        self.generate_stubs(executables)
+        self.generate_stubs(executables, {})
 
-    def generate_stubs(self, executables, output_files={}):
+    def generate_stubs(self, executables, output_infos):
         self.__prepare_output_folder()
 
         for command, executable in executables.items():
-            self.__generate_executable(command, executable)
+            self.__generate_executable(command, executable, output_infos[command])
