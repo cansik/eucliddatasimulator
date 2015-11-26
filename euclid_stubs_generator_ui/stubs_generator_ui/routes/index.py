@@ -7,6 +7,7 @@ from io import BytesIO
 
 import time
 import werkzeug
+from euclid_stubs_generator.mock_generator import MockGenerator
 from euclid_stubs_generator.stubs_generator import StubsGenerator
 from euclidwf.framework.graph_builder import build_graph
 from euclidwf.framework.graph_tasks import ExecTask
@@ -125,7 +126,7 @@ def generate():
     files = session['files']
     """:type files: dict"""
     for (key,value) in files.items():
-        files[key] = request.form[key]
+        files[key] = int(request.form[key])
 
     on =  'pipelineInputCheckBox' in request.form
 
@@ -137,7 +138,8 @@ def generate():
     with open(os.path.join(outputFolder,'resources.txt'), 'w') as outfile:
         json.dump(files, outfile)
 
-    StubsGenerator(outputFolder).generate_stubs(filterd_executables)
+    StubsGenerator(outputFolder).generate_stubs(filterd_executables, dict_ka)
+    MockGenerator(outputFolder).generate_mocks(files)
 
     memory_file = BytesIO()
     with zipfile.ZipFile(memory_file, 'w') as zf:
