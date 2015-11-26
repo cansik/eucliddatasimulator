@@ -20,8 +20,8 @@ def parse_cmd_args():
 def main():
     args = parse_cmd_args()
 
-    generator = StubsGenerator(args.pkgdefs, args.destdir)
-    generator.generate_stubs()
+    generator = StubsGenerator(args.destdir)
+    generator.generate_stubs_from_folder(args.pkgdefs)
 
 
 if __name__ == '__main__':

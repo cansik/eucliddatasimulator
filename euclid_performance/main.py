@@ -3,5 +3,10 @@ from RessourceUser import RessourceUser
 __author__ = 'cansik'
 
 user = RessourceUser()
-user.use_cpu(4, 20)
-#user.use_memory(5000, 10)
+
+user.use_cpu(4)
+user.use_memory(5000)
+user.use_io(1000, 2)
+
+user.start(20)
+print("finished!")
