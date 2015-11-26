@@ -112,6 +112,15 @@ def generate():
         if isinstance(executable, Executable):
             executable.resources = ComputingResources(cores,ram,controller.parseWallTime(walltime))
 
+    dict_ka = {}
+    for key in filterd_executables.keys():
+        dict_ka.update({key:{}})
+
+    for key in filterd_executables.keys():
+        executable = filterd_executables[key]
+        for outputfile in executable.outputs:
+            dict_ka[key].update({outputfile.name : request.form['%s_%s_size' % (key, outputfile.name)]})
+
     # Set Pipeline Input Size
     files = session['files']
     """:type files: dict"""
