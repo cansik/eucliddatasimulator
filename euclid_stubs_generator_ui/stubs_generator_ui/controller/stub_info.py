@@ -1,10 +1,9 @@
-from euclidwf.framework.taskdefs import ComputingResources
-
+import json
 
 class StubInfo():
     def __init__(self, command, executable):
         self.command = command
-        self.inputs = executable.inputs
-        self.outputs = executable.outputs
-        self.resources = executable.resources
+        self.cores = executable.resources.cores
+        self.ram = executable.resources.ram
+        self.walltime = executable.resources.walltime
 

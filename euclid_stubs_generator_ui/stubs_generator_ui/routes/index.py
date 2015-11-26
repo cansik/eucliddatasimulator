@@ -120,6 +120,11 @@ def generate():
 
     on =  'pipelineInputCheckBox' in request.form
 
+    stub_infos = map(lambda (k,v): StubInfo(k,v), filterd_executables.items())
+    list_str = []
+    for key, value in filterd_executables.items():
+        list_str.append(StubInfo(key,value))
+
     with open(os.path.join(outputFolder,'resources.txt'), 'w') as outfile:
         json.dump(files, outfile)
 
