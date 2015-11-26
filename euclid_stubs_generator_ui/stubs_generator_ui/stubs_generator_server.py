@@ -1,4 +1,5 @@
 from flask import Flask
+from flask.ext.cache import Cache
 from flask.ext.cors import CORS
 import config
 
@@ -9,6 +10,7 @@ app = Flask(__name__,
 
 app.config['SECRET_KEY'] = 'secret!'
 CORS(app)
+cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
 # import routes
 import routes.index
