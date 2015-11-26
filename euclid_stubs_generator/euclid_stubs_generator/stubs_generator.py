@@ -64,7 +64,7 @@ class StubsGenerator:
         executables = self.__load_executables(package_definitions_directory)
         self.generate_stubs(executables)
 
-    def generate_stubs(self, executables):
+    def generate_stubs(self, executables, output_files={}):
         self.__prepare_output_folder()
 
         for command, executable in executables.items():
