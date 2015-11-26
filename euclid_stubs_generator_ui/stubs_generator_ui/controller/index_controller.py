@@ -1,3 +1,5 @@
+import os
+
 from euclidwf.framework.graph_builder import build_graph
 from pydron.dataflow.graph import Graph, _Connection, START_TICK
 
@@ -41,3 +43,34 @@ class IndexController(object):
                         if item.source.tick == START_TICK and key != 'context':
                             files.update({key: 1024})
         return files
+
+    def filter_executables_with_graph(self, pydron_graph):
+        pass
+
+    def parseWallTime(self,walltime):
+        """
+        :type walltime : str
+        :return:
+        """
+        splits = walltime.split(':')
+        seconds = 0
+        while switch(len(splits)):
+            if case(1):
+                seconds = int(splits[0]) * 60*60
+                break
+            if case (2):
+                seconds = int(splits[0]) * 60 * 60 + int(splits[1]) * 60
+                break
+            if case (3):
+                seconds = int(splits[0]) * 60 * 60 + int(splits[1]) * 60 + int(splits[2])
+                break
+        return seconds
+
+class switch(object):
+    value = None
+    def __new__(class_, value):
+        class_.value = value
+        return True
+
+def case(*args):
+    return any((arg == switch.value for arg in args))

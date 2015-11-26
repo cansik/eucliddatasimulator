@@ -2,135 +2,141 @@
 <html>
 <head>
 
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-	<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic" rel="stylesheet" type="text/css">
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic"
+          rel="stylesheet" type="text/css">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
 
-	<!-- Optional theme -->
-	<link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
 
-	<link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css">
 
-	<!-- CSS Fileupload -->
-	<link rel="stylesheet" href="/static/css/fileinput.min.css">
+    <!-- CSS Fileupload -->
+    <link rel="stylesheet" href="/static/css/fileinput.min.css">
 
-	<!-- CSS Timepicker -->
-	<link rel="stylesheet" type="text/css" media="screen"
-	href="/static/css/bootstrap-datetimepicker.min.css">
+    <!-- CSS Timepicker -->
+    <link rel="stylesheet" type="text/css" media="screen"
+          href="/static/css/bootstrap-datetimepicker.min.css">
 
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
-	<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 
-	<!-- Latest compiled and minified JavaScript -->
-	<script src="/static/js/bootstrap.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="/static/js/bootstrap.min.js"></script>
 
-	<!-- JavaScript Fileupload -->
-	<script src="/static/js/fileinput.min.js"></script>
+    <!-- JavaScript Fileupload -->
+    <script src="/static/js/fileinput.min.js"></script>
 
-	<script type="text/javascript" src="/static/js/jquery.mask.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.mask.js"></script>
 
-	<script type="text/javascript">
-		$(document).ready(function(){
-  			$('.time').mask('00:00:00');
-  		});
-	</script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.time').mask('00:00:00');
+        });
+    </script>
 
 </head>
 <body>
-	<div class="container containertop">
-		<div class="row">
-			<div class="col-xs-6 col-xs-offset-3 col-sm-4 col-sm-offset-4">
-				<img src="/static/images/logo.jpg" class="img-responsive" alt="Responsive image">
-			</div>
-		</div>
-	</div>
+<div class="container containertop">
+    <div class="row">
+        <div class="col-xs-6 col-xs-offset-3 col-sm-4 col-sm-offset-4">
+            <img src="/static/images/logo.jpg" class="img-responsive" alt="Responsive image">
+        </div>
+    </div>
+</div>
 
-	<div class="container containertop">
-		<div class="checkbox">
-    <label>
-      <input type="checkbox" id="pipelineInputCheckBox"> Generate Pipeline Input Mocks
-    </label>
-  </div>
-	</div>
+<form action="/generate" method="post">
+<div class="container containertop">
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" name="pipelineInputCheckBox" id="pipelineInputCheckBox"> Generate Pipeline Input Mocks
+        </label>
+    </div>
+</div>
 
-	<div class="container containertop" id="PipelineInputTable" style="display: none">
+    <div class="container containertop" id="PipelineInputTable" style="display: none">
 
-		<div class="row rowheader norowmargin">
-			<div class="col-xs-6"><strong>Input Name</strong></div>
-			<div class="col-xs-6"><strong>Input Size</strong></div>
-		</div>
+        <div class="row rowheader norowmargin">
+            <div class="col-xs-6"><strong>Input Name</strong></div>
+            <div class="col-xs-6"><strong>Input Size</strong></div>
+        </div>
 
-		{% for file, size in files.items() %}
-		<div class="row rowbody norowmargin">
-			<div class="col-xs-6">{{file}}</div>
-			<div class="col-xs-6">
-				<div class="input-group">
-					<input type="text" class="form-control" value="{{ size }}" placeholder="">
-					<span class="input-group-addon" id="basic-addon1">MB</span>
-				</div>
-			</div>
-		</div>
-		{% endfor %}
-	</div>
+        {% for file, size in files.items() %}
+        <div class="row rowbody norowmargin">
+            <div class="col-xs-6">{{file}}</div>
+            <div class="col-xs-6">
+                <div class="input-group">
+                    <input name="{{ file }}" type="text" class="form-control" value="{{ size }}" placeholder="">
+                    <span class="input-group-addon" id="basic-addon1">MB</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 
-	<div class="container containertop">
-		<div class="row rowheader norowmargin">
-			<div class="col-xs-2"><strong>Executable Name</strong></div>
-			<div class="col-xs-2"><strong>Input Name</strong></div>
-			<div class="col-xs-2"><strong>Output Name</strong></div>
-			<div class="col-xs-2"><strong>CPU Cores</strong></div>
-			<div class="col-xs-2"><strong>RAM</strong></div>
-			<div class="col-xs-2"><strong>Wall Time</strong></div>
-		</div>
+    <div class="container containertop">
+        <div class="row rowheader norowmargin">
+            <div class="col-xs-2"><strong>Executable Name</strong></div>
+            <div class="col-xs-2"><strong>Input Name</strong></div>
+            <div class="col-xs-2"><strong>Output Name</strong></div>
+            <div class="col-xs-2"><strong>CPU Cores</strong></div>
+            <div class="col-xs-2"><strong>RAM</strong></div>
+            <div class="col-xs-2"><strong>Wall Time</strong></div>
+        </div>
 
-		{% for command, exec in executables %}
-		<div class="row rowbody norowmargin">
-			<div class="col-xs-2">{{ command }}</div>
-			<div class="col-xs-2">N/A</div>
-			<div class="col-xs-2">N/A</div>
-			<div class="col-xs-2">
-				<div class="input-group">
-					<input type="text" class="form-control" value="{{ exec.resources.cores }}" placeholder="">
-					<span class="input-group-addon" id="basic-addon1">Cores</span>
-				</div>
-			</div>
-			<div class="col-xs-2">
-				<div class="input-group">
-					<input type="text" class="form-control" value="{{ exec.resources.ram }}" placeholder="">
-					<span class="input-group-addon" id="basic-addon1">MB</span>
-				</div>
-			</div>
-			<div class="col-xs-2">
-				<div class="input-group bootstrap-timepicker timepicker">
-				<input type="text" data-mask="00:00:00" class="form-control input-small time" value="{{ exec.resources.walltime }}">
+        {% for command, exec in executables %}
+        <div class="row rowbody norowmargin">
+            <div class="col-xs-2">{{ command }}</div>
+            <div class="col-xs-2">N/A</div>
+            <div class="col-xs-2">N/A</div>
+            <div class="col-xs-2">
+                <div class="input-group">
+                    <input type="text" name="{{command}}_cores" class="form-control"
+                           value="{{ exec.resources.cores }}" placeholder="">
+                    <span class="input-group-addon" id="basic-addon1">Cores</span>
+                </div>
+            </div>
+            <div class="col-xs-2">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="{{command}}_ram" value="{{ exec.resources.ram }}" placeholder="">
+                    <span class="input-group-addon" id="basic-addon1">MB</span>
+                </div>
+            </div>
+            <div class="col-xs-2">
+                <div class="input-group bootstrap-timepicker timepicker">
+                    <input type="text" data-mask="00:00:00" class="form-control input-small time" name="{{command}}_walltime"
+                           value="{{ exec.resources.walltime }}">
 					<span class="input-group-addon">
 						<i class="glyphicon glyphicon-time"></i>
 					</span>
-				</div>
-			</div>
-		</div>
+                </div>
+            </div>
+        </div>
 
-    	{% endfor %}
-	</div>
+        {% endfor %}
+    </div>
 
-	<div class="container containertop">
-		<button class="btn btn-lg btn-success col-xs-12" type="submit">Generate</button>
-	</div>
+    <div class="container containertop">
+        <button class="btn btn-lg btn-success col-xs-12" type="submit">Generate</button>
 
-	<script type="text/javascript">
-    $(function() {
+    </div>
+</form>
 
-				// Show / Hide Pipeline Input
-				$(document).ready(function () {
-					$('#pipelineInputCheckBox').change(function () {
-						$( "#PipelineInputTable" ).toggle( "blind" );
+<script type="text/javascript">
+    $(function () {
 
-					});
-				});
-			});
-	</script>
+        // Show / Hide Pipeline Input
+        $(document).ready(function () {
+            $('#pipelineInputCheckBox').change(function () {
+                $("#PipelineInputTable").toggle("blind");
+
+            });
+        });
+    });
+</script>
 
 </body>
 </html>
