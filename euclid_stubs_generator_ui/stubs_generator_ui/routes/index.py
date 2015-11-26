@@ -1,11 +1,11 @@
 import StringIO
 import os
-
 import pickle
 import zipfile
 from io import BytesIO
-
 import time
+
+import errno
 import werkzeug
 from euclid_stubs_generator.mock_generator import MockGenerator
 from euclid_stubs_generator.stubs_generator import StubsGenerator
@@ -13,7 +13,8 @@ from euclidwf.framework.graph_builder import build_graph
 from euclidwf.framework.graph_tasks import ExecTask
 from euclidwf.framework.taskdefs import Executable, ComputingResources
 from euclidwf.utilities import exec_loader
-from flask import render_template, request, url_for, Flask, send_from_directory, session, make_response, send_file
+from flask import render_template, request, url_for, Flask, \
+    send_from_directory, session, make_response, send_file
 from flask.ext.cache import Cache
 from werkzeug.utils import secure_filename, redirect
 import config
@@ -25,13 +26,13 @@ import json
 __author__ = 'cansik'
 
 packageDefs = '../euclidwf_examples/packages/pkgdefs'
-outputFolder = '../temp'
+outputFolder = 'temp/'
 
 # This is the path to the upload directory
 app.config['UPLOAD_FOLDER'] = 'uploads/'
 # These are the extension that we are accepting to be uploaded
-app.config['ALLOWED_EXTENSIONS'] = set(['py', 'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
-
+app.config['ALLOWED_EXTENSIONS'] = set(
+    ['py', 'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 controller = IndexController()
 
@@ -85,9 +86,11 @@ def uploaded_file(filename):
     # filter relevant executables
     ticks = pydron_graph.get_all_ticks()
     tasks = map(lambda t: pydron_graph.get_task(t), ticks)
-    task_names = map(lambda t: t.name if hasattr(t, 'name') else t.command, tasks)
+    task_names = map(lambda t: t.name if hasattr(t, 'name') else t.command,
+                     tasks)
 
-    filtered_execs = dict({(k, v) for k, v in executables.items() if k in task_names})
+    filtered_execs = dict(
+        {(k, v) for k, v in executables.items() if k in task_names})
 
     # todo: melchior fragen warum nicht alle da?!
 
@@ -97,45 +100,53 @@ def uploaded_file(filename):
     session['execs'] = content
     session['files'] = files
 
-    return render_template("euclid.html", files=files, executables=filtered_execs.items())
+    return render_template("euclid.html", files=files,
+                           executables=filtered_execs.items())
 
 
 @app.route('/generate', methods=['POST'])
 def generate():
     filterd_executables = pickle.loads(session['execs'])
 
+    # create output dir
+    mkdir_p(outputFolder)
+
     # Set ComputingResources in the executables
     for key in filterd_executables.keys():
         executable = filterd_executables[key]
-        cores = request.form[key+'_cores']
-        ram = request.form[key+'_ram']
-        walltime = request.form[key+'_walltime']
+        cores = request.form[key + '_cores']
+        ram = request.form[key + '_ram']
+        walltime = request.form[key + '_walltime']
         if isinstance(executable, Executable):
-            executable.resources = ComputingResources(cores,ram,controller.parseWallTime(walltime))
+            executable.resources = ComputingResources(cores, ram,
+                                                      controller.parseWallTime(
+                                                          walltime))
 
     dict_ka = {}
     for key in filterd_executables.keys():
-        dict_ka.update({key:{}})
+        dict_ka.update({key: {}})
 
     for key in filterd_executables.keys():
         executable = filterd_executables[key]
         for outputfile in executable.outputs:
-            dict_ka[key].update({outputfile.name : request.form['%s_%s_size' % (key, outputfile.name)]})
+            dict_ka[key].update({outputfile.name: request.form[
+                '%s_%s_size' % (key, outputfile.name)]})
 
     # Set Pipeline Input Size
     files = session['files']
     """:type files: dict"""
-    for (key,value) in files.items():
+    for (key, value) in files.items():
         files[key] = int(request.form[key])
 
-    on =  'pipelineInputCheckBox' in request.form
+    on = 'pipelineInputCheckBox' in request.form
 
-    stub_infos = map(lambda (k,v): StubInfo(k,v), filterd_executables.items())
+    stub_infos = map(lambda (k, v): StubInfo(k, v),
+                     filterd_executables.items())
     list_str = []
     for key, value in filterd_executables.items():
-        list_str.append(StubInfo(key,value))
+        list_str.append(StubInfo(key, value))
 
-    with open(os.path.join(outputFolder,'resources.txt'), 'w') as outfile:
+    with open(os.path.join(outputFolder, 'resources.txt'), 'w') as outfile:
         json.dump(files, outfile)
 
     StubsGenerator(outputFolder).generate_stubs(filterd_executables, dict_ka)
@@ -151,10 +162,22 @@ def generate():
                 bytes = open(os.path.join(dirname, filename)).read()
                 zf.writestr(data, bytes)
     memory_file.seek(0)
-    return send_file(memory_file, attachment_filename='test.zip', as_attachment=True)
+    return send_file(memory_file, attachment_filename='test.zip',
+                     as_attachment=True)
 
 
 # For a given file, return whether it's an allowed type or not
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+
+
+# creates a dictionary tree
+def mkdir_p(path):
+    try:
+        os.makedirs(path)
+    except OSError as exc:  # Python >2.5
+        if exc.errno == errno.EEXIST and os.path.isdir(path):
+            pass
+        else:
+            raise

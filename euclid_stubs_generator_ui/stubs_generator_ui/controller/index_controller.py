@@ -41,7 +41,7 @@ class IndexController(object):
                     if isinstance(item, _Connection):
                         print("Key: "+key+" Input: "+item.source.tick.__str__())
                         if item.source.tick == START_TICK and key != 'context':
-                            files.update({key: 1024})
+                            files.update({key: 32})
         return files
 
     def filter_executables_with_graph(self, pydron_graph):
