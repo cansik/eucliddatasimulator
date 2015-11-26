@@ -69,4 +69,3 @@ class StubsGenerator(object):
 
         for command, executable in executables.items():
             self.__generate_executable(command, executable)
-
