@@ -30,142 +30,6 @@ workdir = ''
 file_data_dir = 'data'
 
 
-def read_data():
-    global command, input_names, output_names, resources, executable, output_infos
-    executable = pickle.loads("""{{executable}}""")
-    output_infos = pickle.loads("""{{output_infos}}""")
-
-    # link vars
-    command = executable.command
-    input_names = map(lambda x: x.name, executable.inputs)
-    output_names = map(lambda x: x.name, executable.outputs)
-    resources = executable.resources
-
-
-def print_info():
-    print('Name: %s' % command)
-    print('In: %s' % ', '.join(input_names))
-    print('Out: %s' % ', '.join(output_names))
-    print('Resources: %s' % executable.resources)
-
-
-def workload_run():
-    r = RessourceUser()
-
-    r.use_cpu(resources.cores)
-    r.use_memory(resources.mem)
-
-    # todo: include io
-    r.use_io(0, 0)
-
-    r.start(resources.walltime)
-
-
-def read_input_files():
-    for input_name, rel_path in inputs.items():
-        absolute_path = os.path.join(workdir, rel_path)
-
-        # read xml file
-        xmldoc = minidom.parse(absolute_path)
-        file_list = xmldoc.getElementsByTagName('FileName')
-        file_names = map(lambda e: e.firstChild.data, file_list)
-
-        for file_name in file_names:
-            data_path = os.path.join(workdir, file_data_dir, file_name)
-            data = ''
-            with open(data_path, mode='rb') as blob:
-                data = blob.read()
-
-            print("read %s (%s bytes)" % (file_name, sys.getsizeof(data)))
-            junk_files.append(data)
-
-
-def write_output_files():
-    for output_name, rel_path in outputs.items():
-        product_id = create_product_id(output_name)
-        filename = create_file_name(command)
-        absolute_path = os.path.join(workdir, rel_path)
-        parent_dir = os.path.dirname(absolute_path)
-
-        file_size = output_infos[output_name]
-
-        if not os.path.exists(parent_dir):
-            os.makedirs(parent_dir)
-
-        # write xml
-        with open(absolute_path, 'w') as outfile:
-            outfile.write(META_DATA_XML % (product_id, filename))
-
-        # write data file
-        data_dir = os.path.join(workdir, file_data_dir)
-
-        if not os.path.exists(data_dir):
-            os.makedirs(data_dir)
-
-        data_dir = os.path.join(data_dir, filename)
-
-        with open(data_dir, 'wb') as outfile:
-            outfile.write(bytearray(file_size * 1000 * 1000))
-
-
-def create_product_id(output_name):
-    return "P_" + output_name + "_" + str(uuid.uuid4())
-
-
-def create_file_name(output_name):
-    return "FN_" + output_name + "_" + str(uuid.uuid4())
-
-
-def parse_cmd_args():
-    parser = argparse.ArgumentParser(
-        description="Test Stub for Executable %s." % command)
-    parser.add_argument("--workdir", help="Workdir.", default=".")
-    parser.add_argument("--logdir", help="Logdir.", default="./logdir")
-
-    for inputname in input_names:
-        parser.add_argument("--%s" % inputname,
-                            help="Relative path to input (%s) to tester." % inputname)
-    for outputname in output_names:
-        parser.add_argument("--%s" % outputname,
-                            help="relative path to output (%s) to tester." % outputname)
-
-    return parser.parse_args()
-
-
-META_DATA_XML = """<?xml version="1.0" encoding="UTF-8"?>
-<TestDataFiles>
-    <Id>%s</Id>
-    <Files>
-        <DataContainer filestatus='COMMITTED'>
-            <FileName>%s</FileName>
-        </DataContainer>
-    </Files>
-</TestDataFiles>"""
-
-if __name__ == '__main__':
-    read_data()
-    args = parse_cmd_args()
-
-    inputs = {value: getattr(args, value) for value in input_names}
-    outputs = {value: getattr(args, value) for value in output_names}
-
-    workdir = args.workdir
-
-    print_info()
-
-    # test
-    print("reading files...")
-    read_input_files()
-
-    print("startig workload test...")
-    # workload_run()
-
-    print("writing output files...")
-    write_output_files()
-
-    print("finished!")
-
-
 class RessourceUser(object):
     def __init__(self):
         self.wall_time = 0
@@ -303,3 +167,139 @@ class WorkloadThread(threading.Thread):
 
     def run(self):
         self.function(self, *self.args, **self.kwargs)
+
+
+def read_data():
+    global command, input_names, output_names, resources, executable, output_infos
+    executable = pickle.loads("""{{executable}}""")
+    output_infos = pickle.loads("""{{output_infos}}""")
+
+    # link vars
+    command = executable.command
+    input_names = map(lambda x: x.name, executable.inputs)
+    output_names = map(lambda x: x.name, executable.outputs)
+    resources = executable.resources
+
+
+def print_info():
+    print('Name: %s' % command)
+    print('In: %s' % ', '.join(input_names))
+    print('Out: %s' % ', '.join(output_names))
+    print('Resources: %s' % executable.resources)
+
+
+def workload_run():
+    r = RessourceUser()
+
+    r.use_cpu(int(resources.cores))
+    r.use_memory(int(resources.ram))
+
+    # todo: include io
+    r.use_io(0, 0)
+
+    r.start(resources.walltime)
+
+
+def read_input_files():
+    for input_name, rel_path in inputs.items():
+        absolute_path = os.path.join(workdir, rel_path)
+
+        # read xml file
+        xmldoc = minidom.parse(absolute_path)
+        file_list = xmldoc.getElementsByTagName('FileName')
+        file_names = map(lambda e: e.firstChild.data, file_list)
+
+        for file_name in file_names:
+            data_path = os.path.join(workdir, file_data_dir, file_name)
+            data = ''
+            with open(data_path, mode='rb') as blob:
+                data = blob.read()
+
+            print("read %s (%s bytes)" % (file_name, sys.getsizeof(data)))
+            junk_files.append(data)
+
+
+def write_output_files():
+    for output_name, rel_path in outputs.items():
+        product_id = create_product_id(output_name)
+        filename = create_file_name(command)
+        absolute_path = os.path.join(workdir, rel_path)
+        parent_dir = os.path.dirname(absolute_path)
+
+        file_size = output_infos[output_name]
+
+        if not os.path.exists(parent_dir):
+            os.makedirs(parent_dir)
+
+        # write xml
+        with open(absolute_path, 'w') as outfile:
+            outfile.write(META_DATA_XML % (product_id, filename))
+
+        # write data file
+        data_dir = os.path.join(workdir, file_data_dir)
+
+        if not os.path.exists(data_dir):
+            os.makedirs(data_dir)
+
+        data_dir = os.path.join(data_dir, filename)
+
+        with open(data_dir, 'wb') as outfile:
+            outfile.write(bytearray(file_size * 1000 * 1000))
+
+
+def create_product_id(output_name):
+    return "P_" + output_name + "_" + str(uuid.uuid4())
+
+
+def create_file_name(output_name):
+    return "FN_" + output_name + "_" + str(uuid.uuid4())
+
+
+def parse_cmd_args():
+    parser = argparse.ArgumentParser(
+        description="Test Stub for Executable %s." % command)
+    parser.add_argument("--workdir", help="Workdir.", default=".")
+    parser.add_argument("--logdir", help="Logdir.", default="./logdir")
+
+    for inputname in input_names:
+        parser.add_argument("--%s" % inputname,
+                            help="Relative path to input (%s) to tester." % inputname)
+    for outputname in output_names:
+        parser.add_argument("--%s" % outputname,
+                            help="relative path to output (%s) to tester." % outputname)
+
+    return parser.parse_args()
+
+
+META_DATA_XML = """<?xml version="1.0" encoding="UTF-8"?>
+<TestDataFiles>
+    <Id>%s</Id>
+    <Files>
+        <DataContainer filestatus='COMMITTED'>
+            <FileName>%s</FileName>
+        </DataContainer>
+    </Files>
+</TestDataFiles>"""
+
+if __name__ == '__main__':
+    read_data()
+    args = parse_cmd_args()
+
+    inputs = {value: getattr(args, value) for value in input_names}
+    outputs = {value: getattr(args, value) for value in output_names}
+
+    workdir = args.workdir
+
+    print_info()
+
+    # test
+    print("reading files...")
+    read_input_files()
+
+    print("startig workload test...")
+    workload_run()
+
+    print("writing output files...")
+    write_output_files()
+
+    print("finished!")
