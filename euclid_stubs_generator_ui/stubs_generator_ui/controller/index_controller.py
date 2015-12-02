@@ -1,6 +1,11 @@
 import os
+import zipfile
+from io import BytesIO
 
+import time
 from euclidwf.framework.graph_builder import build_graph
+from euclidwf.framework.taskdefs import Executable
+from flask import json
 from pydron.dataflow.graph import Graph, _Connection, START_TICK
 
 
@@ -65,6 +70,31 @@ class IndexController(object):
                 seconds = int(splits[0]) * 60 * 60 + int(splits[1]) * 60 + int(splits[2])
                 break
         return seconds
+
+    def writeComputingResources(self, filterd_executables, outputFolder):
+        computingResources = {}
+        for key, value in filterd_executables.items():
+            if isinstance(value, Executable):
+                computingResources.update({key : {}})
+                computingResources[key].update( {"cores" : value.resources.cores} )
+                computingResources[key].update( {"ram" : value.resources.ram} )
+                computingResources[key].update( {"walltime" : value.resources.walltime} )
+
+        with open(os.path.join(outputFolder,'resources.txt'), 'w') as outfile:
+            json.dump(computingResources, outfile)
+
+    def createZip(self, outputFolder):
+        memory_file = BytesIO()
+        with zipfile.ZipFile(memory_file, 'w') as zf:
+            for dirname, subdirs, files in os.walk(outputFolder):
+                for filename in files:
+                    data = zipfile.ZipInfo(filename)
+                    data.date_time = time.localtime(time.time())[:6]
+                    data.compress_type = zipfile.ZIP_DEFLATED
+                    bytes = open(os.path.join(dirname, filename)).read()
+                    zf.writestr(data, bytes)
+        memory_file.seek(0)
+        return memory_file
 
 class switch(object):
     value = None

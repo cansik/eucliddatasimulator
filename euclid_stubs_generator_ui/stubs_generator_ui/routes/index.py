@@ -89,9 +89,7 @@ def uploaded_file(filename):
     tasks = map(lambda t: pydron_graph.get_task(t), ticks)
     task_names = map(lambda t: t.name if hasattr(t, 'name') else t.command, tasks)
 
-    filtered_execs = dict({(k, v) for k, v in executables.items() if k in task_names})
-
-    # todo: melchior fragen warum nicht alle da?!
+    filtered_execs = executables#dict({(k, v) for k, v in executables.items() if k in task_names})
 
     # filter(lambda e: e in task_names, executables.keys())
 
@@ -99,12 +97,15 @@ def uploaded_file(filename):
     session['execs'] = content
     session['files'] = files
 
-    return render_template("euclid.html", files=files, executables=filtered_execs.items())
+    temp = pickle.loads(session['execs'])
+
+    return render_template("euclid.html", files=files, executables=filtered_execs.items(), abc=filtered_execs)
 
 
 @app.route('/generate', methods=['POST'])
 def generate():
-    filterd_executables = pickle.loads(session['execs'])
+    temp = session['execs']
+    filterd_executables = pickle.loads(temp)
 
     # create output dir
     mkdir_p(outputFolder)
@@ -140,34 +141,12 @@ def generate():
     for key, value in filterd_executables.items():
         list_str.append(StubInfo(key,value))
 
-
-
-    computingResources = {}
-    for key, value in filterd_executables.items():
-        if isinstance(value, Executable):
-            computingResources.update({key : {}})
-            computingResources[key].update( {"cores" : value.resources.cores} )
-            computingResources[key].update( {"ram" : value.resources.ram} )
-            computingResources[key].update( {"walltime" : value.resources.walltime} )
-
-
-
     StubsGenerator(outputFolder).generate_stubs(filterd_executables, dict_ka)
     MockGenerator(outputFolder).generate_mocks(files)
 
-    with open(os.path.join(outputFolder,'resources.txt'), 'w') as outfile:
-        json.dump(computingResources, outfile)
+    controller.writeComputingResources(filterd_executables, outputFolder)
 
-    memory_file = BytesIO()
-    with zipfile.ZipFile(memory_file, 'w') as zf:
-        for dirname, subdirs, files in os.walk(outputFolder):
-            for filename in files:
-                data = zipfile.ZipInfo(filename)
-                data.date_time = time.localtime(time.time())[:6]
-                data.compress_type = zipfile.ZIP_DEFLATED
-                bytes = open(os.path.join(dirname, filename)).read()
-                zf.writestr(data, bytes)
-    memory_file.seek(0)
+    memory_file = controller.createZip(outputFolder)
     return send_file(memory_file, attachment_filename='test.zip', as_attachment=True)
 
 
