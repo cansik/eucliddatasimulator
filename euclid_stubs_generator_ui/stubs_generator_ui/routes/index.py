@@ -2,6 +2,8 @@ import StringIO
 import os
 
 import pickle
+import shelve
+import uuid
 import zipfile
 from io import BytesIO
 
@@ -98,17 +100,25 @@ def uploaded_file(filename):
     # filter(lambda e: e in task_names, executables.keys())
 
     content = pickle.dumps(filtered_execs)
-    session['execs'] = content
+    #session['execs'] = content
     session['files'] = files
 
-    temp = pickle.loads(session['execs'])
+    #Generate a UUID for storing data per session
+    session['uid'] = str(uuid.uuid4())
+    data = shelve.open(os.path.join(outputFolder,'shelvedata'))
+    data[session['uid']] = content
+
+    #temp = pickle.loads(session['execs'])
 
     return render_template("euclid.html", files=files, executables=filtered_execs.items(), abc=filtered_execs)
 
 
 @app.route('/generate', methods=['POST'])
 def generate():
-    temp = session['execs']
+
+    data = shelve.open(os.path.join(outputFolder,'shelvedata'))
+    temp = data[session['uid']]
+
     filterd_executables = pickle.loads(temp)
 
     # create output dir
