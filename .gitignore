@@ -9,3 +9,6 @@ euclidwf/packages
 euclidwf/dist
 euclid_stubs_generator/build
 euclid_stubs_generator/test_data
+euclid_stubs_generator_ui/uploads
+euclid_stubs_generator_ui/temp
+euclid_performance/.idea

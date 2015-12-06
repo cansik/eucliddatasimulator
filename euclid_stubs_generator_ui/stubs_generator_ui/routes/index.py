@@ -56,10 +56,10 @@ def upload():
 
     path = os.path.join(app.config['UPLOAD_FOLDER'])
 
+    session.clear()
+
     if not os.path.exists(path):
         os.makedirs(path)
-
-    session['test'] = "hallo welt"
 
     # Move the file form the temporal folder to
     # the upload folder we setup
@@ -80,8 +80,6 @@ def uploaded_file(filename):
     # return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
     executables = exec_loader.get_all_executables(packageDefs)
 
-    print(session['test'])
-
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     print(os.path.abspath(file_path))
 
@@ -100,8 +98,6 @@ def uploaded_file(filename):
     content = pickle.dumps(filtered_execs)
     session['execs'] = content
     session['files'] = files
-
-    temp = pickle.loads(session['execs'])
 
     return render_template("euclid.html", files=files, executables=filtered_execs.items(), abc=filtered_execs)
 
