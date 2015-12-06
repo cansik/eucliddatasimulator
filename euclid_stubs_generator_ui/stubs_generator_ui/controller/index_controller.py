@@ -8,6 +8,8 @@ from euclidwf.framework.taskdefs import Executable
 from flask import json
 from pydron.dataflow.graph import Graph, _Connection, START_TICK
 
+from utils.context_manager import ChangeDir
+
 
 class IndexController(object):
     def build_graph_from_file(self, file_path):
@@ -85,15 +87,22 @@ class IndexController(object):
 
     def createZip(self, outputFolder):
         memory_file = BytesIO()
-        with zipfile.ZipFile(memory_file, 'w') as zf:
-            for dirname, subdirs, files in os.walk(outputFolder):
-                for filename in files:
-                    data = zipfile.ZipInfo(filename)
-                    data.date_time = time.localtime(time.time())[:6]
-                    data.compress_type = zipfile.ZIP_DEFLATED
-                    bytes = open(os.path.join(dirname, filename)).read()
-                    zf.writestr(data, bytes)
-        memory_file.seek(0)
+
+        base_dir = '/'.join(outputFolder.split('/')[0:-2])
+        target_dir = '/'.join(outputFolder.split('/')[-2:])
+
+        with ChangeDir(base_dir):
+            with zipfile.ZipFile(memory_file, 'w') as zf:
+                for dirname, subdirs, files in os.walk(target_dir):
+                    zf.write(dirname)
+
+                    for filename in files:
+                        data = zipfile.ZipInfo(os.path.join(dirname, filename))
+                        data.date_time = time.localtime(time.time())[:6]
+                        data.compress_type = zipfile.ZIP_DEFLATED
+                        bytes = open(os.path.join(dirname, filename)).read()
+                        zf.writestr(data, bytes)
+            memory_file.seek(0)
         return memory_file
 
 class switch(object):

@@ -3,6 +3,8 @@ import os
 
 import pickle
 import shelve
+
+import shutil
 import uuid
 import zipfile
 from io import BytesIO
@@ -103,6 +105,8 @@ def uploaded_file(filename):
     #session['execs'] = content
     session['files'] = files
 
+    session['pipeline_name'] = os.path.splitext(filename)[0]
+
     #Generate a UUID for storing data per session
     session['uid'] = str(uuid.uuid4())
     data = shelve.open(os.path.join(outputFolder,'shelvedata'))
@@ -118,11 +122,13 @@ def generate():
 
     data = shelve.open(os.path.join(outputFolder,'shelvedata'))
     temp = data[session['uid']]
+    pipeline_name = session['pipeline_name']
 
     filterd_executables = pickle.loads(temp)
 
     # create output dir
-    mkdir_p(outputFolder)
+    pipeline_output = os.path.join(outputFolder, pipeline_name) + '/'
+    mkdir_p(pipeline_output)
 
     # Set ComputingResources in the executables
     for key in filterd_executables.keys():
@@ -155,13 +161,17 @@ def generate():
     for key, value in filterd_executables.items():
         list_str.append(StubInfo(key,value))
 
-    StubsGenerator(outputFolder).generate_stubs(filterd_executables, dict_ka)
-    MockGenerator(outputFolder).generate_mocks(files)
+    StubsGenerator(pipeline_output).generate_stubs(filterd_executables, dict_ka)
+    MockGenerator(pipeline_output).generate_mocks(files)
 
-    controller.writeComputingResources(filterd_executables, outputFolder)
+    controller.writeComputingResources(filterd_executables, pipeline_output)
 
-    memory_file = controller.createZip(outputFolder)
-    return send_file(memory_file, attachment_filename='test.zip', as_attachment=True)
+    memory_file = controller.createZip(pipeline_output)
+
+    # remove output folder
+    shutil.rmtree(pipeline_output)
+
+    return send_file(memory_file, attachment_filename='%s.zip' % pipeline_name, as_attachment=True)
 
 
 # For a given file, return whether it's an allowed type or not
