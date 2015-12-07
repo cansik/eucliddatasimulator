@@ -162,7 +162,9 @@ def generate():
         list_str.append(StubInfo(key,value))
 
     StubsGenerator(pipeline_output).generate_stubs(filterd_executables, dict_ka)
-    MockGenerator(pipeline_output).generate_mocks(files)
+
+    if on:
+        MockGenerator(pipeline_output).generate_mocks(files)
 
     controller.writeComputingResources(filterd_executables, pipeline_output)
 
