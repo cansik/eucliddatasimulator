@@ -163,6 +163,8 @@ def generate():
 
     StubsGenerator(pipeline_output).generate_stubs(filterd_executables, dict_ka)
 
+    MockGenerator(pipeline_output).generate_script(files)
+
     if on:
         MockGenerator(pipeline_output).generate_mocks(files)
 
