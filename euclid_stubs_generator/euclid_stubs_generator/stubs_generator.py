@@ -1,13 +1,10 @@
 import os
 
 import shutil
-import stat
 
 import pickle
 from euclidwf.utilities import exec_loader
-from jinja2 import Template
-
-from euclid_stubs_generator.utils import mkdir_p
+from euclid_stubs_generator.utils import mkdir_p, read_template, write_all_text
 
 __author__ = 'cansik'
 
@@ -15,20 +12,7 @@ __author__ = 'cansik'
 class StubsGenerator:
     def __init__(self, output_folder):
         self.output_folder = output_folder
-        self.template = self.__read_template()
-
-    @staticmethod
-    def __read_template():
-        template_path = os.path.join(os.path.dirname(__file__), 'stubs_template.py')
-        with open(template_path, 'r') as template_file:
-            data = template_file.read()
-            return Template(data)
-
-    @staticmethod
-    def __write_all_text(file_path, content):
-        with open(file_path, 'w') as outputfile:
-            outputfile.write(content)
-        os.chmod(file_path, stat.S_IRWXU)
+        self.template = read_template('stubs_template.py')
 
     def __load_executables(self, package_definitions_directory):
         # read all executables out of the files in the package defs
@@ -59,7 +43,7 @@ class StubsGenerator:
                                       output_infos=pickle.dumps(output_infos))
 
         # write output
-        self.__write_all_text(exec_file, output)
+        write_all_text(exec_file, output)
 
     def generate_stubs_from_folder(self, package_definitions_directory):
         executables = self.__load_executables(package_definitions_directory)

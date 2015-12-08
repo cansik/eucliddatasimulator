@@ -38,6 +38,9 @@ class BasicTest(unittest.TestCase):
     def test_mock_generator(self):
         self.mocker.generate_mocks({'exposures': 3})
 
+    def test_mock_script_generator(self):
+        self.mocker.generate_script({'exposures': 3})
+
     def test_run_pipeline(self):
         test_script = os.path.join(self.output_folder,
                                    self.test_pipeline_name + ".py")
