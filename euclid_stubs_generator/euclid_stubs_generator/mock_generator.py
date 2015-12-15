@@ -45,10 +45,10 @@ class MockGenerator:
             with open(data_path, 'wb') as outfile:
                 outfile.write(bytearray(data_size))
 
-        return {file_name + self.__EXTENSION:
-                {'xml_data': xml_data.encode("hex"),
-                 'data_file_name': data_file_name + self.__EXTENSION,
-                 'data_size': data_size}}
+        return {file_name:
+                    {'extension': self.__EXTENSION,
+                     'xml_data': META_DATA_XML.encode("hex"),
+                     'data_size': data_size}}
 
     def generate_mocks(self, files):
         self.__prepare_output_folder()
@@ -68,7 +68,5 @@ class MockGenerator:
 
         # add files to script
         template = read_template('mock_script_template.py')
-        output = template.render(files=pickle.dumps(mock_files))
+        output = template.render(mocks=pickle.dumps(mock_files))
         write_all_text(output_file_name, output)
-
-
