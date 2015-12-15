@@ -161,7 +161,7 @@ def generate():
     for key, value in filterd_executables.items():
         list_str.append(StubInfo(key,value))
 
-    StubsGenerator(pipeline_output).generate_stubs(filterd_executables, dict_ka)
+    StubsGenerator(os.path.join(pipeline_output, "bin")).generate_stubs(filterd_executables, dict_ka)
 
     MockGenerator(pipeline_output).generate_script(files)
 

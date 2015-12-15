@@ -10,13 +10,14 @@ __author__ = 'cansik'
 
 def parse_cmd_args():
     parser = argparse.ArgumentParser(
-        description="Utility generating test stubs for executables.")
+            description="Utility generating test stubs for executables.")
     parser.add_argument("--pkgdefs",
                         help="Path to folder that contains the package definitions (package repository).")
     parser.add_argument("--destdir",
                         help="Directory to write the test stubs to.")
     parser.add_argument("--xml", dest='xml', action='store_true',
-                        help="Specify flag to generate xml output (otherwise text is produced; note that lists are always pickled).")
+                        help="Specify flag to generate xml output (otherwise text is produced; "
+                             "note that lists are always pickled).")
     args = parser.parse_args()
     args.pkgdefs = os.path.expandvars(args.pkgdefs)
     args.destdir = os.path.expandvars(args.destdir)
@@ -34,7 +35,7 @@ def main():
     test_pipeline_name = 'vis_split_quadrants'
 
     executables = dict({(k, v) for k, v in executables.items() if
-                   k == test_pipeline_name})
+                        k == test_pipeline_name})
 
     generator.generate_stubs(executables,
                              {test_pipeline_name: {'quadrants_list': 20}})

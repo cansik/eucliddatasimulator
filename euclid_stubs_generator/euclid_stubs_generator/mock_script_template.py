@@ -18,6 +18,7 @@ def mkdir_p(path):
         else:
             raise
 
+
 def read_data():
     global files
     files = pickle.loads(u"""{{files}}""")
@@ -25,7 +26,7 @@ def read_data():
 
 def parse_cmd_args():
     parser = argparse.ArgumentParser(
-        description="Utility generating mock data for executables.")
+            description="Utility generating mock data for executables.")
     parser.add_argument("--destdir", default=".",
                         help="Directory to write the mock data into.")
     args = parser.parse_args()
