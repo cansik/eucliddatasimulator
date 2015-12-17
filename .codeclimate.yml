@@ -10,3 +10,9 @@ ratings:
 exclude_paths:
 - euclidwf/*
 - euclidwf_examples/*
+- pydron/*
+- euclid_stubs_generator_ui/static/*
+- euclid_stubs_generator_ui/uploads/*
+- euclid_stubs_generator/build/*
+- euclid_stubs_generator/test/*
+- euclid_stubs_generator/test_data/*
