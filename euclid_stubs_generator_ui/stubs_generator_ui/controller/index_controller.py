@@ -54,8 +54,42 @@ class IndexController(object):
                             files.update({key: 32})
         return files
 
-    def filter_executables_with_graph(self, pydron_graph):
-        pass
+    def filter_executables_with_graph(self , pydron_graph):
+        """
+        :type pydron_graph: Graph
+        :type executables: [Executable]
+        :type filtered_executables: Set
+        :return:
+        """
+        filtered_executables = set()
+        for key,value in pydron_graph._ticks.items():
+            task = value.task
+            if isinstance(task, ExecTask):
+                filtered_executables.add(StubInfo(task.command))
+            if isinstance(task, ParallelSplitTask):
+                filtered_executables.add(StubInfo(task.name, True))
+                subTasks = self.filter_executables_with_graph(task.body_graph)
+                filtered_executables = filtered_executables.union(subTasks)
+
+        return filtered_executables
+
+    def setDefaultComputingResources(self, executables, filtered_execs):
+        """
+        :type filtered_execs: set([StubInfo])
+        :type executables: [Executable]
+        :return:
+        """
+        for filtered_exec in filtered_execs:
+            for executable in executables.items():
+                if filtered_exec.command == executable[0]:
+                    filtered_exec.cores = executable[1].resources.cores;
+                    filtered_exec.ram = executable[1].resources.ram;
+                    filtered_exec.walltime = executable[1].resources.walltime;
+                    for file in executable[1].outputs:
+                        filtered_exec.outputfiles.append((file.name, 50))
+                    for file in executable[1].inputs:
+                        filtered_exec.inputfiles.append((file.name))
+                    break
 
     def parseWallTime(self,walltime):
         """

@@ -8,3 +8,4 @@ class StubInfo():
         self.ram = int()
         self.walltime = int()
         self.outputfiles = list()
+        self.inputfiles = list()
