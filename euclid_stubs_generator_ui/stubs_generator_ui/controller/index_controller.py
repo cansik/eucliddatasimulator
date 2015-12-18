@@ -4,9 +4,12 @@ from io import BytesIO
 
 import time
 from euclidwf.framework.graph_builder import build_graph
+from euclidwf.framework.graph_tasks import ExecTask, ParallelSplitTask
 from euclidwf.framework.taskdefs import Executable
 from flask import json
 from pydron.dataflow.graph import Graph, _Connection, START_TICK
+
+from controller.stub_info import StubInfo
 
 from utils.context_manager import ChangeDir
 
@@ -75,12 +78,12 @@ class IndexController(object):
 
     def writeComputingResources(self, filterd_executables, outputFolder):
         computingResources = {}
-        for key, value in filterd_executables.items():
-            if isinstance(value, Executable):
-                computingResources.update({key : {}})
-                computingResources[key].update( {"cores" : value.resources.cores} )
-                computingResources[key].update( {"ram" : value.resources.ram} )
-                computingResources[key].update( {"walltime" : value.resources.walltime} )
+        for stubinfo in filterd_executables:
+            if isinstance(stubinfo, StubInfo):
+                computingResources.update({stubinfo.command : {}})
+                computingResources[stubinfo.command].update( {"cores" : stubinfo.cores} )
+                computingResources[stubinfo.command].update( {"ram" : stubinfo.ram} )
+                computingResources[stubinfo.command].update( {"walltime" : stubinfo.walltime} )
 
         with open(os.path.join(outputFolder,'resources.txt'), 'w') as outfile:
             json.dump(computingResources, outfile)

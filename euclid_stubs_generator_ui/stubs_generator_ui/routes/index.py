@@ -97,7 +97,8 @@ def uploaded_file(filename):
     tasks = map(lambda t: pydron_graph.get_task(t), ticks)
     task_names = map(lambda t: t.name if hasattr(t, 'name') else t.command, tasks)
 
-    filtered_execs = executables#dict({(k, v) for k, v in executables.items() if k in task_names})
+    filtered_execs = controller.filter_executables_with_graph(pydron_graph)#dict({(k, v) for k, v in executables.items() if k in task_names})
+    controller.setDefaultComputingResources(executables, filtered_execs)
 
     # filter(lambda e: e in task_names, executables.keys())
 
@@ -108,45 +109,59 @@ def uploaded_file(filename):
     session['pipeline_name'] = os.path.splitext(filename)[0]
 
     #Generate a UUID for storing data per session
-    session['uid'] = str(uuid.uuid4())
-    data = shelve.open(os.path.join(outputFolder,'shelvedata'))
-    data[session['uid']] = content
+    #session['uid'] = str(uuid.uuid4())
+    #data = shelve.open(os.path.join(outputFolder,'shelvedata'))
+    #data[session['uid']] = content
 
     #temp = pickle.loads(session['execs'])
 
-    return render_template("euclid.html", files=files, executables=filtered_execs.items(), abc=filtered_execs)
+    session['execs'] = pickle.dumps(filtered_execs)
+
+    return render_template("euclid.html", files=files, executables=filtered_execs)
 
 
 @app.route('/generate', methods=['POST'])
 def generate():
 
-    data = shelve.open(os.path.join(outputFolder,'shelvedata'))
-    temp = data[session['uid']]
+    #data = shelve.open(os.path.join(outputFolder,'shelvedata'))
+    #temp = data[session['uid']]
     pipeline_name = session['pipeline_name']
 
-    filterd_executables = pickle.loads(temp)
+    #filterd_executables = pickle.loads(temp)
+
+    execs = pickle.loads(session['execs'])
 
     # create output dir
     pipeline_output = os.path.join(outputFolder, pipeline_name) + '/'
     mkdir_p(pipeline_output)
 
     # Set ComputingResources in the executables
-    for key in filterd_executables.keys():
-        executable = filterd_executables[key]
-        cores = request.form[key+'_cores']
-        ram = request.form[key+'_ram']
-        walltime = request.form[key+'_walltime']
-        if isinstance(executable, Executable):
-            executable.resources = ComputingResources(cores,ram,controller.parseWallTime(walltime))
+    #for key in filterd_executables.keys():
+    #    executable = filterd_executables[key]
+    #    cores = request.form[key+'_cores']
+    #    ram = request.form[key+'_ram']
+    #    walltime = request.form[key+'_walltime']
+    #    if isinstance(executable, Executable):
+    #        executable.resources = ComputingResources(cores,ram,controller.parseWallTime(walltime))
 
-    dict_ka = {}
-    for key in filterd_executables.keys():
-        dict_ka.update({key:{}})
+    for stubinfo in execs:
+        stubinfo.cores = request.form[stubinfo.command+'_cores']
+        stubinfo.ram = request.form[stubinfo.command+'_ram']
+        stubinfo.walltime = controller.parseWallTime(request.form[stubinfo.command+'_walltime'])    #Parsing the walltime to ensure right format
 
-    for key in filterd_executables.keys():
-        executable = filterd_executables[key]
-        for outputfile in executable.outputs:
-            dict_ka[key].update({outputfile.name : request.form['%s_%s_size' % (key, outputfile.name)]})
+        tempTupleList = list()
+        for outputfile in stubinfo.outputfiles:
+            tempTupleList.append((outputfile[0], request.form['%s_%s_size' % (stubinfo.command, outputfile[0])]))
+        stubinfo.outputfiles = tempTupleList
+
+    #dict_ka = {}
+    #for key in filterd_executables.keys():
+    #    dict_ka.update({key:{}})
+
+    #for key in filterd_executables.keys():
+    #    executable = filterd_executables[key]
+    #    for outputfile in executable.outputs:
+    #        dict_ka[key].update({outputfile.name : request.form['%s_%s_size' % (key, outputfile.name)]})
 
     # Set Pipeline Input Size
     files = session['files']
@@ -156,19 +171,18 @@ def generate():
 
     on =  'pipelineInputCheckBox' in request.form
 
-    stub_infos = map(lambda (k,v): StubInfo(k,v), filterd_executables.items())
-    list_str = []
-    for key, value in filterd_executables.items():
-        list_str.append(StubInfo(key,value))
+    #stub_infos = map(lambda (k,v): StubInfo(k,v), filterd_executables.items())
+    #list_str = []
+    #for key, value in filterd_executables.items():
+    #    list_str.append(StubInfo(key,value))
 
-    StubsGenerator(os.path.join(pipeline_output, "bin")).generate_stubs(filterd_executables, dict_ka)
-
-    MockGenerator(pipeline_output).generate_script(files)
+    StubsGenerator(os.path.join(pipeline_output, "bin")).generate_stubs(execs)
+    StubsGenerator(outputFolder).generate_stubs(execs)
 
     if on:
         MockGenerator(pipeline_output).generate_mocks(files)
 
-    controller.writeComputingResources(filterd_executables, pipeline_output)
+    controller.writeComputingResources(execs, pipeline_output)
 
     memory_file = controller.createZip(pipeline_output)
 

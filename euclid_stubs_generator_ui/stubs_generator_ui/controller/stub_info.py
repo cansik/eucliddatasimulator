@@ -1,9 +1,10 @@
 import json
 
 class StubInfo():
-    def __init__(self, command, executable):
+    def __init__(self, command, isParallelSplit=False):
         self.command = command
-        self.cores = executable.resources.cores
-        self.ram = executable.resources.ram
-        self.walltime = executable.resources.walltime
-
+        self.isParallelSplit = isParallelSplit
+        self.cores = int()
+        self.ram = int()
+        self.walltime = int()
+        self.outputfiles = list()
