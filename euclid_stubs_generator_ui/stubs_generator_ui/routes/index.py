@@ -24,7 +24,6 @@ from flask.ext.cache import Cache
 from werkzeug.utils import secure_filename, redirect
 import config
 from controller.index_controller import IndexController
-from controller.stub_info import StubInfo
 from main import app
 import json
 
@@ -145,13 +144,13 @@ def generate():
     #        executable.resources = ComputingResources(cores,ram,controller.parseWallTime(walltime))
 
     for stubinfo in execs:
-        stubinfo.cores = request.form[stubinfo.command+'_cores']
-        stubinfo.ram = request.form[stubinfo.command+'_ram']
+        stubinfo.cores = int(request.form[stubinfo.command+'_cores'])
+        stubinfo.ram = float(request.form[stubinfo.command+'_ram'])
         stubinfo.walltime = controller.parseWallTime(request.form[stubinfo.command+'_walltime'])    #Parsing the walltime to ensure right format
 
         tempTupleList = list()
         for outputfile in stubinfo.outputfiles:
-            tempTupleList.append((outputfile[0], request.form['%s_%s_size' % (stubinfo.command, outputfile[0])]))
+            tempTupleList.append((outputfile[0], int(request.form['%s_%s_size' % (stubinfo.command, outputfile[0])])))
         stubinfo.outputfiles = tempTupleList
 
     #dict_ka = {}
@@ -177,7 +176,7 @@ def generate():
     #    list_str.append(StubInfo(key,value))
 
     StubsGenerator(os.path.join(pipeline_output, "bin")).generate_stubs(execs)
-    StubsGenerator(outputFolder).generate_stubs(execs)
+    MockGenerator(pipeline_output).generate_script(files)
 
     if on:
         MockGenerator(pipeline_output).generate_mocks(files)

@@ -3,13 +3,13 @@ import zipfile
 from io import BytesIO
 
 import time
+
+from euclid_stubs_generator.stub_info import StubInfo
 from euclidwf.framework.graph_builder import build_graph
 from euclidwf.framework.graph_tasks import ExecTask, ParallelSplitTask
 from euclidwf.framework.taskdefs import Executable
 from flask import json
 from pydron.dataflow.graph import Graph, _Connection, START_TICK
-
-from controller.stub_info import StubInfo
 
 from utils.context_manager import ChangeDir
 

@@ -13,18 +13,14 @@ from xml.dom import minidom
 
 __author__ = 'cansik'
 
-command = ''
-input_names = []
+stub_info = None
+
+junk_files = []
+
 output_names = []
-resources = None
-executable = None
 
 inputs = {}
 outputs = {}
-
-output_infos = {}
-
-junk_files = []
 
 workdir = ''
 file_data_dir = 'data'
@@ -170,34 +166,29 @@ class WorkloadThread(threading.Thread):
 
 
 def read_data():
-    global command, input_names, output_names, resources, executable, output_infos
-    executable = pickle.loads("""{{executable}}""")
-    output_infos = pickle.loads("""{{output_infos}}""")
-
-    # link vars
-    command = executable.command
-    input_names = map(lambda x: x.name, executable.inputs)
-    output_names = map(lambda x: x.name, executable.outputs)
-    resources = executable.resources
+    global stub_info, output_names
+    stub_info = pickle.loads("""{{stub_info}}""")
+    output_names = map(lambda x: x[0], stub_info.outputfiles)
 
 
 def print_info():
-    print('Name: %s' % command)
-    print('In: %s' % ', '.join(input_names))
+    print('Name: %s' % stub_info.command)
+    print('In: %s' % ', '.join(stub_info.inputfiles))
     print('Out: %s' % ', '.join(output_names))
-    print('Resources: %s' % executable.resources)
+    print('Resources:\nCores: %s\nWalltime: %s\nRam: %s' % (stub_info.cores, stub_info.walltime, stub_info.ram))
+    print('Is Parallel Split: %s' % stub_info.isParallelSplit)
 
 
 def workload_run():
     r = RessourceUser()
 
-    r.use_cpu(int(resources.cores))
-    r.use_memory(int(resources.ram))
+    r.use_cpu(int(stub_info.cores))
+    r.use_memory(int(stub_info.ram))
 
     # todo: include io
     r.use_io(0, 0)
 
-    r.start(resources.walltime)
+    r.start(stub_info.walltime)
 
 
 def read_input_files():
@@ -220,13 +211,14 @@ def read_input_files():
 
 
 def write_output_files():
+    counter = 0
     for output_name, rel_path in outputs.items():
         product_id = create_product_id(output_name)
-        filename = create_file_name(command)
+        filename = create_file_name(stub_info.command)
         absolute_path = os.path.join(workdir, rel_path)
         parent_dir = os.path.dirname(absolute_path)
 
-        file_size = output_infos[output_name]
+        file_size = stub_info.outputfiles[counter][1]
 
         if not os.path.exists(parent_dir):
             os.makedirs(parent_dir)
@@ -245,6 +237,7 @@ def write_output_files():
 
         with open(data_dir, 'wb') as outfile:
             outfile.write(bytearray(file_size * 1000 * 1000))
+        counter += 1
 
 
 def create_product_id(output_name):
@@ -257,11 +250,11 @@ def create_file_name(output_name):
 
 def parse_cmd_args():
     parser = argparse.ArgumentParser(
-        description="Test Stub for Executable %s." % command)
+        description="Test Stub for Executable %s." % stub_info.command)
     parser.add_argument("--workdir", help="Workdir.", default=".")
     parser.add_argument("--logdir", help="Logdir.", default="./logdir")
 
-    for inputname in input_names:
+    for inputname in stub_info.inputfiles:
         parser.add_argument("--%s" % inputname,
                             help="Relative path to input (%s) to tester." % inputname)
     for outputname in output_names:
@@ -285,7 +278,7 @@ if __name__ == '__main__':
     read_data()
     args = parse_cmd_args()
 
-    inputs = {value: getattr(args, value) for value in input_names}
+    inputs = {value: getattr(args, value) for value in stub_info.inputfiles}
     outputs = {value: getattr(args, value) for value in output_names}
 
     workdir = args.workdir
