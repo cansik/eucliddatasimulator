@@ -45,6 +45,11 @@ class StubsGenerator:
         write_all_text(exec_file, output)
 
     def generate_stubs(self, stub_infos):
+        """
+        Generates stub executables for the euclid pipeline.
+        :param stub_infos: [StubInfo]
+        :return:
+        """
         self.__prepare_output_folder()
 
         for stub_info in stub_infos:

@@ -26,7 +26,7 @@ workdir = ''
 file_data_dir = 'data'
 
 
-class RessourceUser(object):
+class ResourceUser(object):
     def __init__(self):
         self.wall_time = 0
         self.workload_threads = []
@@ -109,7 +109,7 @@ class RessourceUser(object):
         procs = []
 
         for c in range(cores):
-            p = Process(target=RessourceUser.__cpu_calculator)
+            p = Process(target=ResourceUser.__cpu_calculator)
             procs.append(p)
             p.start()
 
@@ -132,7 +132,7 @@ class RessourceUser(object):
     def __non_blocking_sleep(thread, wall_time, thread_list):
         sleep(wall_time)
         # shutdown all threads
-        RessourceUser.__cleanup_threads(thread_list)
+        ResourceUser.__cleanup_threads(thread_list)
 
     @staticmethod
     def __cleanup_threads(thread_list):
@@ -180,7 +180,7 @@ def print_info():
 
 
 def workload_run():
-    r = RessourceUser()
+    r = ResourceUser()
 
     r.use_cpu(int(stub_info.cores))
     r.use_memory(int(stub_info.ram))
