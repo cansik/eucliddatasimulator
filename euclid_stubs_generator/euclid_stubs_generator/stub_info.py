@@ -7,3 +7,9 @@ class StubInfo:
         self.walltime = int()
         self.outputfiles = list()
         self.inputfiles = list()
+
+    def __eq__(self, other):
+        return self.command == other.command
+
+    def __hash__(self):
+        return hash(self.command)

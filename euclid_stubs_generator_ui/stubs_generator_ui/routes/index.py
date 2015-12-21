@@ -89,6 +89,10 @@ def uploaded_file(filename):
     print(os.path.abspath(file_path))
 
     pydron_graph = controller.build_graph_from_file(file_path)
+
+    # from euclidwf.utilities import visualizer
+    # visualizer.visualize_graph(pydron_graph)
+
     files = controller.get_all_start_inputs_from_graph(pydron_graph)
 
     # filter relevant executables

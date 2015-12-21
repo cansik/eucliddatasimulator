@@ -6,7 +6,7 @@ import time
 
 from euclid_stubs_generator.stub_info import StubInfo
 from euclidwf.framework.graph_builder import build_graph
-from euclidwf.framework.graph_tasks import ExecTask, ParallelSplitTask
+from euclidwf.framework.graph_tasks import ExecTask, ParallelSplitTask, NestedGraphTask
 from euclidwf.framework.taskdefs import Executable
 from flask import json
 from pydron.dataflow.graph import Graph, _Connection, START_TICK
@@ -26,12 +26,12 @@ class IndexController(object):
         keys = locals().keys()
         for k in keys:
             var = locals().get(k)
-            globals().update({k:var})
-            if hasattr(var, '__call__') and hasattr(var,'ispipeline') and not pipeline_found:
+            globals().update({k: var})
+            if hasattr(var, '__call__') and hasattr(var, 'ispipeline') and not pipeline_found:
                 pipeline_found = True
                 pipeline2 = var
 
-        assert getattr(pipeline2,'ispipeline')
+        assert getattr(pipeline2, 'ispipeline')
         assert pipeline2 is not None
 
         pydron_graph = build_graph(pipeline2)
@@ -49,12 +49,12 @@ class IndexController(object):
                 abc = tick.in_connections.items()[1]
                 for key, item in tick.in_connections.items():
                     if isinstance(item, _Connection):
-                        print("Key: "+key+" Input: "+item.source.tick.__str__())
+                        print("Key: " + key + " Input: " + item.source.tick.__str__())
                         if item.source.tick == START_TICK and key != 'context':
                             files.update({key: 32})
         return files
 
-    def filter_executables_with_graph(self , pydron_graph):
+    def filter_executables_with_graph(self, pydron_graph):
         """
         :type pydron_graph: Graph
         :type executables: [Executable]
@@ -62,14 +62,27 @@ class IndexController(object):
         :return:
         """
         filtered_executables = set()
-        for key,value in pydron_graph._ticks.items():
+        for key, value in pydron_graph._ticks.items():
             task = value.task
+
             if isinstance(task, ExecTask):
+                print("Normal: %s" % task.command)
                 filtered_executables.add(StubInfo(task.command))
+                continue
             if isinstance(task, ParallelSplitTask):
+                print("Split: %s" % task.name)
                 filtered_executables.add(StubInfo(task.name, True))
                 subTasks = self.filter_executables_with_graph(task.body_graph)
                 filtered_executables = filtered_executables.union(subTasks)
+                continue
+            if isinstance(task, NestedGraphTask):
+                print("Nested: %s" % task.name)
+                filtered_executables.add(StubInfo(task.name, False))
+                subTasks = self.filter_executables_with_graph(task.body_graph)
+                filtered_executables = filtered_executables.union(subTasks)
+                continue
+
+            print("Unkown: %s" % type(task))
 
         return filtered_executables
 
@@ -91,7 +104,7 @@ class IndexController(object):
                         filtered_exec.inputfiles.append((file.name))
                     break
 
-    def parseWallTime(self,walltime):
+    def parseWallTime(self, walltime):
         """
         :type walltime : str
         :return:
@@ -100,12 +113,12 @@ class IndexController(object):
         seconds = 0
         while switch(len(splits)):
             if case(1):
-                seconds = int(splits[0]) * 60*60
+                seconds = int(splits[0]) * 60 * 60
                 break
-            if case (2):
+            if case(2):
                 seconds = int(splits[0]) * 60 * 60 + int(splits[1]) * 60
                 break
-            if case (3):
+            if case(3):
                 seconds = int(splits[0]) * 60 * 60 + int(splits[1]) * 60 + int(splits[2])
                 break
         return seconds
@@ -114,12 +127,12 @@ class IndexController(object):
         computingResources = {}
         for stubinfo in filterd_executables:
             if isinstance(stubinfo, StubInfo):
-                computingResources.update({stubinfo.command : {}})
-                computingResources[stubinfo.command].update( {"cores" : stubinfo.cores} )
-                computingResources[stubinfo.command].update( {"ram" : stubinfo.ram} )
-                computingResources[stubinfo.command].update( {"walltime" : stubinfo.walltime} )
+                computingResources.update({stubinfo.command: {}})
+                computingResources[stubinfo.command].update({"cores": stubinfo.cores})
+                computingResources[stubinfo.command].update({"ram": stubinfo.ram})
+                computingResources[stubinfo.command].update({"walltime": stubinfo.walltime})
 
-        with open(os.path.join(outputFolder,'resources.txt'), 'w') as outfile:
+        with open(os.path.join(outputFolder, 'resources.txt'), 'w') as outfile:
             json.dump(computingResources, outfile)
 
     def createZip(self, outputFolder):
@@ -142,11 +155,14 @@ class IndexController(object):
             memory_file.seek(0)
         return memory_file
 
+
 class switch(object):
     value = None
+
     def __new__(class_, value):
         class_.value = value
         return True
+
 
 def case(*args):
     return any((arg == switch.value for arg in args))
