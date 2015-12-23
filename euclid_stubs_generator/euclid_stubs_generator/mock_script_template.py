@@ -64,7 +64,7 @@ def generate_files(output_files, output_folder):
         filename = create_file_name(k)
 
         xml_file_name = k + v['extension']
-        xml_data = v['xml_data'].decode("hex")
+        xml_data = META_DATA_XML
 
         data_file_name = filename + v['extension']
         data_size = int(v['data_size'])
