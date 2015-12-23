@@ -223,9 +223,11 @@ def write_output_files():
         if not os.path.exists(parent_dir):
             os.makedirs(parent_dir)
 
+        xml_output = create_xml_output(product_id, [filename])
+
         # write xml
         with open(absolute_path, 'w') as outfile:
-            outfile.write(META_DATA_XML % (product_id, filename))
+            outfile.write(xml_output.toprettyxml(indent="    ", encoding="utf-8"))
 
         # write data file
         data_dir = os.path.join(workdir, file_data_dir)
@@ -330,16 +332,6 @@ def parse_cmd_args():
 
     return parser.parse_args()
 
-
-META_DATA_XML = """<?xml version="1.0" encoding="UTF-8"?>
-<TestDataFiles>
-    <Id>%s</Id>
-    <Files>
-        <DataContainer filestatus='COMMITTED'>
-            <FileName>%s</FileName>
-        </DataContainer>
-    </Files>
-</TestDataFiles>"""
 
 if __name__ == '__main__':
     read_data()

@@ -1,8 +1,7 @@
 import os
 import pickle
 
-from euclid_stubs_generator.stubs_template import create_product_id, \
-    META_DATA_XML, create_file_name
+from euclid_stubs_generator.stubs_template import create_product_id, create_file_name, create_xml_output
 from euclid_stubs_generator.utils import mkdir_p, write_all_text, read_template
 
 
@@ -32,23 +31,21 @@ class MockGenerator:
                                  data_file_name + self.__EXTENSION)
 
         # define content
-        xml_data = META_DATA_XML % (
-            product_id, data_file_name + self.__EXTENSION)
+        xml_output = create_xml_output(product_id, [data_file_name + self.__EXTENSION])
         data_size = file_size * 1000 * 1000
 
         # create xml
         if write_files:
             with open(xml_path, 'w') as outfile:
-                outfile.write(xml_data)
+                outfile.write(xml_output.toprettyxml(indent="    ", encoding="utf-8"))
 
             # data file
             with open(data_path, 'wb') as outfile:
                 outfile.write(bytearray(data_size))
 
-        return {file_name:
-                    {'extension': self.__EXTENSION,
-                     'xml_data': META_DATA_XML.encode("hex"),
-                     'data_size': data_size}}
+        return {file_name: {
+            'extension': self.__EXTENSION,
+            'data_size': data_size}}
 
     def generate_mocks(self, files):
         self.__prepare_output_folder()
