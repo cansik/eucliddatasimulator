@@ -243,7 +243,12 @@ def write_output_files():
 
 
 def write_split_output():
-    total_input_size = sys.getsizeof(junk_files)
+    # calculate input size
+    total_input_size = 0
+
+    for junk in junk_files:
+        total_input_size += sys.getsizeof(junk)
+
     part_size = int(total_input_size / stub_info.split_parts)
 
     print('part size: %s bytes' % part_size)
