@@ -2,7 +2,6 @@ import os
 import unittest
 
 from euclid_stubs_generator.stub_info import StubInfo
-from euclidwf.utilities import exec_loader
 from euclid_stubs_generator.mock_generator import MockGenerator
 from euclid_stubs_generator.stubs_generator import StubsGenerator
 
@@ -75,7 +74,7 @@ class BasicTest(unittest.TestCase):
         self.generator.generate_stubs([info])
 
     def test_f_mock_generator(self):
-        self.mocker.generate_mocks({'exposures': 3})
+        self.mocker.generate_mocks({'exposures': 9})
 
     def test_g_run_list_exec(self):
         test_script = os.path.join(self.output_folder,

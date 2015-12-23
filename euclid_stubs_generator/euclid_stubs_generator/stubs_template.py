@@ -43,11 +43,11 @@ class ResourceUser(object):
 
         # start threads
         self.workload_threads.append(
-            WorkloadThread(self.__use_cpu, self.cores))
+                WorkloadThread(self.__use_cpu, self.cores))
         self.workload_threads.append(
-            WorkloadThread(self.__use_memory, self.ram))
+                WorkloadThread(self.__use_memory, self.ram))
         self.workload_threads.append(
-            WorkloadThread(self.__use_io, self.file_size, self.file_count))
+                WorkloadThread(self.__use_io, self.file_size, self.file_count))
 
         for t in self.workload_threads:
             t.start()
@@ -214,7 +214,7 @@ def write_output_files():
     counter = 0
     for output_name, rel_path in outputs.items():
         product_id = create_product_id(output_name)
-        filename = create_file_name(stub_info.command)
+        filename = create_file_name(stub_info.command) + '.data'
         absolute_path = os.path.join(workdir, rel_path)
         parent_dir = os.path.dirname(absolute_path)
 
@@ -240,6 +240,73 @@ def write_output_files():
         counter += 1
 
 
+def write_split_output():
+    total_input_size = sys.getsizeof(junk_files)
+    part_size = int(total_input_size / stub_info.split_parts)
+
+    print('part size: %s bytes' % part_size)
+
+    # create parts
+    split_part_list = []
+
+    for i in range(stub_info.split_parts):
+        # write data file
+        data_dir = os.path.join(workdir, file_data_dir)
+
+        if not os.path.exists(data_dir):
+            os.makedirs(data_dir)
+
+        filename = create_file_name('%s_PART_%s' % (stub_info.command, i)) + '.data'
+        split_part_list.append(filename)
+
+        data_dir = os.path.join(data_dir, filename)
+
+        with open(data_dir, 'wb') as outfile:
+            outfile.write(bytearray(part_size))
+
+    # write description file (XML)
+    # todo: assumption that only one file is output for split!
+    xml_name = outputs.items()[0][0]
+    product_id = create_product_id(xml_name)
+    xml_path = os.path.join(workdir, xml_name) + '.data'
+    xml_output = create_xml_output(product_id, split_part_list)
+
+    # write xml
+    with open(xml_path, 'w') as outfile:
+        outfile.write(xml_output.toprettyxml(indent="    ", encoding="utf-8"))
+
+
+def create_xml_output(product_id, file_list):
+    xmldoc = minidom.Document()
+
+    # create root elements
+    root = xmldoc.createElement('TestDataFiles')
+
+    id_element = xmldoc.createElement('Id')
+    id_content = xmldoc.createTextNode(product_id)
+    id_element.appendChild(id_content)
+
+    files_element = xmldoc.createElement('Files')
+
+    # create file elements
+    for file_name in file_list:
+        data_container = xmldoc.createElement('DataContainer')
+        data_container.setAttribute('filestatus', 'COMMITTED')
+
+        file_name_element = xmldoc.createElement('FileName')
+        file_name_content = xmldoc.createTextNode(file_name)
+        file_name_element.appendChild(file_name_content)
+
+        data_container.appendChild(file_name_element)
+        files_element.appendChild(data_container)
+
+    # append elements
+    root.appendChild(id_element)
+    root.appendChild(files_element)
+    xmldoc.appendChild(root)
+    return xmldoc
+
+
 def create_product_id(output_name):
     return "P_" + output_name + "_" + str(uuid.uuid4())
 
@@ -250,7 +317,7 @@ def create_file_name(output_name):
 
 def parse_cmd_args():
     parser = argparse.ArgumentParser(
-        description="Test Stub for Executable %s." % stub_info.command)
+            description="Test Stub for Executable %s." % stub_info.command)
     parser.add_argument("--workdir", help="Workdir.", default=".")
     parser.add_argument("--logdir", help="Logdir.", default="./logdir")
 
@@ -292,7 +359,11 @@ if __name__ == '__main__':
     print("startig workload test...")
     workload_run()
 
-    print("writing output files...")
-    write_output_files()
+    if stub_info.isParallelSplit:
+        print("creating split...")
+        write_split_output()
+    else:
+        print("writing output files...")
+        write_output_files()
 
     print("finished!")

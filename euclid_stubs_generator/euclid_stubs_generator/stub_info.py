@@ -7,6 +7,8 @@ class StubInfo:
         self.walltime = int()
         self.outputfiles = list()
         self.inputfiles = list()
+        # todo: set right split part
+        self.split_parts = 2
 
     def __eq__(self, other):
         return self.command == other.command

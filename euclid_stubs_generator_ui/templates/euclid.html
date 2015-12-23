@@ -90,7 +90,7 @@
         </div>
 
         {% for stubinfo in executables %}
-        <div class="row rowbody norowmargin">
+        <div class="row rowbody norowmargin" {% if stubinfo.isParallelSplit %} style="background-color: #FFF0D0" {% endif %}>
             <div class="col-xs-2">{{ stubinfo.command }}</div>
             <div class="col-xs-2">N/A</div>
             <div class="col-xs-2">
