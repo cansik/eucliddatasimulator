@@ -1,31 +1,15 @@
-import StringIO
 import os
-
 import pickle
-import shelve
-
 import shutil
-import uuid
-import zipfile
-from io import BytesIO
-
-import time
-
 import errno
-import werkzeug
+
 from euclid_stubs_generator.mock_generator import MockGenerator
 from euclid_stubs_generator.stubs_generator import StubsGenerator
-from euclidwf.framework.graph_builder import build_graph
-from euclidwf.framework.graph_tasks import ExecTask
-from euclidwf.framework.taskdefs import Executable, ComputingResources
 from euclidwf.utilities import exec_loader
-from flask import render_template, request, url_for, Flask, send_from_directory, session, make_response, send_file
-from flask.ext.cache import Cache
+from flask import render_template, request, url_for, session, send_file
 from werkzeug.utils import secure_filename, redirect
-import config
 from controller.index_controller import IndexController
 from main import app
-import json
 
 __author__ = 'cansik'
 
@@ -50,7 +34,6 @@ def index():
 @app.route('/upload', methods=['POST'])
 def upload():
     # Get the name of the uploaded file
-    print('upload method called')
     file = request.files['file']
     # Check if the file is one of the allowed types/extensions
     # if file and allowed_file(file.filename):
@@ -61,8 +44,6 @@ def upload():
 
     if not os.path.exists(path):
         os.makedirs(path)
-
-    session['test'] = "hallo welt"
 
     # Move the file form the temporal folder to
     # the upload folder we setup
@@ -79,14 +60,9 @@ def upload():
 # an image, that image is going to be show after the upload
 @app.route('/overview/<filename>')
 def uploaded_file(filename):
-    print(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-    # return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
     executables = exec_loader.get_all_executables(packageDefs)
 
-    print(session['test'])
-
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    print(os.path.abspath(file_path))
 
     pydron_graph = controller.build_graph_from_file(file_path)
 
@@ -95,29 +71,12 @@ def uploaded_file(filename):
 
     files = controller.get_all_start_inputs_from_graph(pydron_graph)
 
-    # filter relevant executables
-    ticks = pydron_graph.get_all_ticks()
-    tasks = map(lambda t: pydron_graph.get_task(t), ticks)
-    task_names = map(lambda t: t.name if hasattr(t, 'name') else t.command, tasks)
-
     filtered_execs = controller.filter_executables_with_graph(pydron_graph)#dict({(k, v) for k, v in executables.items() if k in task_names})
     controller.setDefaultComputingResources(executables, filtered_execs)
 
-    # filter(lambda e: e in task_names, executables.keys())
-
-    content = pickle.dumps(filtered_execs)
-    #session['execs'] = content
+    # set session variables
     session['files'] = files
-
     session['pipeline_name'] = os.path.splitext(filename)[0]
-
-    #Generate a UUID for storing data per session
-    #session['uid'] = str(uuid.uuid4())
-    #data = shelve.open(os.path.join(outputFolder,'shelvedata'))
-    #data[session['uid']] = content
-
-    #temp = pickle.loads(session['execs'])
-
     session['execs'] = pickle.dumps(filtered_execs)
 
     return render_template("euclid.html", files=files, executables=filtered_execs)
@@ -138,15 +97,6 @@ def generate():
     pipeline_output = os.path.join(outputFolder, pipeline_name) + '/'
     mkdir_p(pipeline_output)
 
-    # Set ComputingResources in the executables
-    #for key in filterd_executables.keys():
-    #    executable = filterd_executables[key]
-    #    cores = request.form[key+'_cores']
-    #    ram = request.form[key+'_ram']
-    #    walltime = request.form[key+'_walltime']
-    #    if isinstance(executable, Executable):
-    #        executable.resources = ComputingResources(cores,ram,controller.parseWallTime(walltime))
-
     for stubinfo in execs:
         stubinfo.cores = int(request.form[stubinfo.command+'_cores'])
         stubinfo.ram = float(request.form[stubinfo.command+'_ram'])
@@ -157,15 +107,6 @@ def generate():
             tempTupleList.append((outputfile[0], int(request.form['%s_%s_size' % (stubinfo.command, outputfile[0])])))
         stubinfo.outputfiles = tempTupleList
 
-    #dict_ka = {}
-    #for key in filterd_executables.keys():
-    #    dict_ka.update({key:{}})
-
-    #for key in filterd_executables.keys():
-    #    executable = filterd_executables[key]
-    #    for outputfile in executable.outputs:
-    #        dict_ka[key].update({outputfile.name : request.form['%s_%s_size' % (key, outputfile.name)]})
-
     # Set Pipeline Input Size
     files = session['files']
     """:type files: dict"""
@@ -173,11 +114,6 @@ def generate():
         files[key] = int(request.form[key])
 
     on =  'pipelineInputCheckBox' in request.form
-
-    #stub_infos = map(lambda (k,v): StubInfo(k,v), filterd_executables.items())
-    #list_str = []
-    #for key, value in filterd_executables.items():
-    #    list_str.append(StubInfo(key,value))
 
     StubsGenerator(os.path.join(pipeline_output, "bin")).generate_stubs(execs)
     MockGenerator(pipeline_output).generate_script(files)
