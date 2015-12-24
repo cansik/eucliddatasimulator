@@ -71,7 +71,7 @@ def uploaded_file(filename):
 
     files = controller.get_all_start_inputs_from_graph(pydron_graph)
 
-    filtered_execs = controller.filter_executables_with_graph(pydron_graph)#dict({(k, v) for k, v in executables.items() if k in task_names})
+    filtered_execs = controller.filter_executables_with_graph(pydron_graph, executables)#dict({(k, v) for k, v in executables.items() if k in task_names})
     controller.setDefaultComputingResources(executables, filtered_execs)
 
     # set session variables

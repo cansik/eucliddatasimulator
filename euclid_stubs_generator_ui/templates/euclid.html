@@ -82,7 +82,8 @@
     <div class="container containertop">
         <div class="row rowheader norowmargin">
             <div class="col-xs-2"><strong>Executable Name</strong></div>
-            <div class="col-xs-2"><strong>Input Name</strong></div>
+            <div class="col-xs-1"><strong>Executable Type</strong></div>
+            <div class="col-xs-1"><strong>Input Name</strong></div>
             <div class="col-xs-2"><strong>Output Name</strong></div>
             <div class="col-xs-2"><strong>CPU Cores</strong></div>
             <div class="col-xs-2"><strong>RAM</strong></div>
@@ -92,6 +93,7 @@
         {% for stubinfo in executables %}
         <div class="row rowbody norowmargin" {% if stubinfo.isParallelSplit %} style="background-color: #FFF0D0" {% endif %}>
             <div class="col-xs-2">{{ stubinfo.command }}</div>
+            <div class="col-xs-2">{{ stubinfo.Type }}</div>
             <div class="col-xs-2">N/A</div>
             <div class="col-xs-2">
                 <a id="{{stubinfo.command}}_button" class="col-xs-12" href="#" type="button">Show</a>

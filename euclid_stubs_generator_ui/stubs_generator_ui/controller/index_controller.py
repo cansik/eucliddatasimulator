@@ -4,7 +4,7 @@ from io import BytesIO
 
 import time
 
-from euclid_stubs_generator.stub_info import StubInfo
+from euclid_stubs_generator.stub_info import StubInfo, NodeType
 from euclidwf.framework.graph_builder import build_graph
 from euclidwf.framework.graph_tasks import ExecTask, ParallelSplitTask, NestedGraphTask
 from euclidwf.framework.taskdefs import Executable
@@ -54,7 +54,7 @@ class IndexController(object):
                             files.update({key: 32})
         return files
 
-    def filter_executables_with_graph(self, pydron_graph):
+    def filter_executables_with_graph(self, pydron_graph, loaded_executables):
         """
         :type pydron_graph: Graph
         :type executables: [Executable]
@@ -67,18 +67,23 @@ class IndexController(object):
 
             if isinstance(task, ExecTask):
                 print("Normal: %s" % task.command)
-                filtered_executables.add(StubInfo(task.command))
+
+                matching = [s for s in loaded_executables if task.command in s]
+                if len(matching) == 1 and loaded_executables[matching[0]].outputs[0].content_type == 'listfile':
+                    filtered_executables.add(StubInfo(task.command, NodeType.normal, True))
+                else:
+                    filtered_executables.add(StubInfo(task.command, NodeType.normal))
                 continue
             if isinstance(task, ParallelSplitTask):
                 print("Split: %s" % task.name)
-                filtered_executables.add(StubInfo(task.name, True))
-                subTasks = self.filter_executables_with_graph(task.body_graph)
+                filtered_executables.add(StubInfo(task.name, NodeType.split))
+                subTasks = self.filter_executables_with_graph(task.body_graph, loaded_executables)
                 filtered_executables = filtered_executables.union(subTasks)
                 continue
             if isinstance(task, NestedGraphTask):
                 print("Nested: %s" % task.name)
-                filtered_executables.add(StubInfo(task.name, False))
-                subTasks = self.filter_executables_with_graph(task.body_graph)
+                filtered_executables.add(StubInfo(task.name, NodeType.nested))
+                subTasks = self.filter_executables_with_graph(task.body_graph, loaded_executables)
                 filtered_executables = filtered_executables.union(subTasks)
                 continue
 
