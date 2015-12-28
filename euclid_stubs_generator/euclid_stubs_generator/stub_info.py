@@ -1,6 +1,10 @@
+from enum import Enum
+
+
 class StubInfo:
-    def __init__(self, command, isParallelSplit=False):
+    def __init__(self, command, nodeType, isParallelSplit=False):
         self.command = command
+        self.nodeType = nodeType
         self.isParallelSplit = isParallelSplit
         self.cores = int()
         self.ram = float()
@@ -15,3 +19,8 @@ class StubInfo:
 
     def __hash__(self):
         return hash(self.command)
+
+class NodeType(Enum):
+    normal = 1
+    nested = 2
+    split = 3
