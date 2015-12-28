@@ -264,23 +264,24 @@ def write_split_output():
             os.makedirs(data_dir)
 
         filename = create_file_name('%s_PART_%s' % (stub_info.command, i)) + '.data'
-        split_part_list.append(filename)
 
         data_dir = os.path.join(data_dir, filename)
+
+        relative_output_path = os.path.join(file_data_dir, filename)
+        split_part_list.append(relative_output_path)
 
         with open(data_dir, 'wb') as outfile:
             outfile.write(bytearray(part_size))
 
-    # write description file (XML)
+    # write pickled list
     # todo: assumption that only one file is output for split!
-    xml_name = outputs.items()[0][0]
-    product_id = create_product_id(xml_name)
-    xml_path = os.path.join(workdir, xml_name) + '.data'
-    xml_output = create_xml_output(product_id, split_part_list)
+    list_file_name = outputs.items()[0][0]
+    list_path = os.path.join(workdir, list_file_name) + '.data'
 
-    # write xml
-    with open(xml_path, 'w') as outfile:
-        outfile.write(xml_output.toprettyxml(indent="    ", encoding="utf-8"))
+    # write list file
+    with open(list_path, 'w') as outfile:
+        outfile.write(pickle.dumps(split_part_list))
+
 
 
 def create_xml_output(product_id, file_list):

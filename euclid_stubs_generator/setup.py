@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='euclid_stubs_generator',
-    version='1.0.2',
+    version='1.1.0',
     packages=['euclid_stubs_generator',
               'euclid_stubs_generator.executors'],
     url='',
