@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from euclid_stubs_generator.stub_info import StubInfo
+from euclid_stubs_generator.stub_info import StubInfo, NodeType
 from euclid_stubs_generator.mock_generator import MockGenerator
 from euclid_stubs_generator.stubs_generator import StubsGenerator
 
@@ -62,7 +62,7 @@ class BasicTest(unittest.TestCase):
         assert result == 0
 
     def test_e_generate_list_stub(self):
-        info = StubInfo(self.test_list_exec)
+        info = StubInfo(self.test_list_exec, nodeType=NodeType.split)
         info.outputfiles = [('quadrants_list', 5)]
         info.inputfiles = ['exposures']
         info.isParallelSplit = True
