@@ -38,8 +38,14 @@ class StubsGenerator:
         # generate new executable
         exec_file = os.path.join(self.output_folder, '%s.py' % command)
 
+        # create stub info dict
+        info_dict = stub_info.__dict__
+
+        # pop nodeType for less dependency
+        info_dict.pop('nodeType')
+
         # generate template
-        output = self.template.render(stub_info=pickle.dumps(stub_info))
+        output = self.template.render(stub_info=pickle.dumps(info_dict))
 
         # write output
         write_all_text(exec_file, output)

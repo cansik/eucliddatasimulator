@@ -25,6 +25,10 @@ outputs = {}
 workdir = ''
 file_data_dir = 'data'
 
+# dummy class for loading stub info
+class Struct:
+    def __init__(self, **entries):
+        self.__dict__.update(entries)
 
 class ResourceUser(object):
     def __init__(self):
@@ -167,7 +171,9 @@ class WorkloadThread(threading.Thread):
 
 def read_data():
     global stub_info, output_names
-    stub_info = pickle.loads("""{{stub_info}}""")
+    info_dict = pickle.loads("""{{stub_info}}""")
+    stub_info = Struct(**info_dict)
+
     output_names = map(lambda x: x[0], stub_info.outputfiles)
 
 
