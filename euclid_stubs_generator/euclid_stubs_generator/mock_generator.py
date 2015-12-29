@@ -8,7 +8,7 @@ from euclid_stubs_generator.utils import mkdir_p, write_all_text, read_template
 class MockGenerator:
     __DATA_DIR = 'data'
     __WORK_DIR = 'workdir'
-    __EXTENSION = '.data'
+    __EXTENSION = '.dat'
     __MOCK_SCRIPT_NAME = 'mock_script.py'
 
     def __init__(self, output_folder):

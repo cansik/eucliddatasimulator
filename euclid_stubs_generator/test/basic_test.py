@@ -51,13 +51,13 @@ class BasicTest(unittest.TestCase):
 
     def test_d_run_xml_exec(self):
         test_script = os.path.join(self.output_folder,
-                                   self.test_xml_exec + ".py")
+                                   self.test_xml_exec)
 
         result = os.system(
                 "python %s --workdir %s"
                 " --corrected_frame %s --hot_pixels_map %s --quadrant %s --master_dark %s --control_params %s" %
-                (test_script, self.workdir, 'corrected_frame.data', 'hot_pixels_map.data', 'quadrant.data',
-                 'master_dark.data', 'control_params.data'))
+                (test_script, self.workdir, 'corrected_frame.dat', 'hot_pixels_map.dat', 'quadrant.dat',
+                 'master_dark.dat', 'control_params.dat'))
 
         assert result == 0
 
@@ -78,12 +78,12 @@ class BasicTest(unittest.TestCase):
 
     def test_g_run_list_exec(self):
         test_script = os.path.join(self.output_folder,
-                                   self.test_list_exec + ".py")
+                                   self.test_list_exec)
 
         result = os.system(
                 "python %s --workdir %s --exposures %s --quadrants_list %s" %
-                (test_script, self.workdir, 'exposures.data',
-                 'quadrants_list.data'))
+                (test_script, self.workdir, 'exposures.dat',
+                 'quadrants_list.dat'))
 
         assert result == 0
 

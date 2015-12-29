@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os
 import pickle
 import random
@@ -24,6 +26,7 @@ outputs = {}
 
 workdir = ''
 file_data_dir = 'data'
+extension = '.dat'
 
 # dummy class for loading stub info
 class Struct:
@@ -220,7 +223,7 @@ def write_output_files():
     counter = 0
     for output_name, rel_path in outputs.items():
         product_id = create_product_id(output_name)
-        filename = create_file_name(stub_info.command) + '.data'
+        filename = create_file_name(stub_info.command) + extension
         absolute_path = os.path.join(workdir, rel_path)
         parent_dir = os.path.dirname(absolute_path)
 
@@ -269,7 +272,7 @@ def write_split_output():
         if not os.path.exists(data_dir):
             os.makedirs(data_dir)
 
-        filename = create_file_name('%s_PART_%s' % (stub_info.command, i)) + '.data'
+        filename = create_file_name('%s_PART_%s' % (stub_info.command, i)) + extension
 
         data_dir = os.path.join(data_dir, filename)
 
@@ -282,7 +285,7 @@ def write_split_output():
     # write pickled list
     # todo: assumption that only one file is output for split!
     list_file_name = outputs.items()[0][0]
-    list_path = os.path.join(workdir, list_file_name) + '.data'
+    list_path = os.path.join(workdir, list_file_name) + extension
 
     # write list file
     with open(list_path, 'w') as outfile:

@@ -36,7 +36,7 @@ class StubsGenerator:
 
     def __generate_executable(self, command, stub_info):
         # generate new executable
-        exec_file = os.path.join(self.output_folder, '%s.py' % command)
+        exec_file = os.path.join(self.output_folder, '%s' % command)
 
         # create stub info dict
         info_dict = stub_info.__dict__
