@@ -124,17 +124,23 @@
         </div>
 
 
+
         <div id="{{stubinfo.command}}_table" class="row rowbody norowmargin" style="display: none">
             {% for file in stubinfo.outputfiles %}
 
             <div class="row rowbody norowmargin">
 
-                <div class="col-xs-12">
-                    <div class="input-group">
+                <div class="col-xs-12" >
+                    <div class="input-group" {% if stubinfo.isParallelSplit %} style="display: none" {% endif %}>
                         <span class="input-group-addon" id="basic-addon1">{{ file[0] }}</span>
                         <input type="text" name="{{stubinfo.command}}_{{ file[0] }}_size" class="form-control"
                                value="50" placeholder="">
                         <span class="input-group-addon" id="basic-addon1">MB</span>
+                    </div>
+
+                    <div class="input-group" {% if not stubinfo.isParallelSplit %} style="display: none" {% endif %}>
+                        <input type="text" class="form-control" name="{{stubinfo.command}}_splits" value="{{ stubinfo.split_parts }}" placeholder="">
+                        <span class="input-group-addon" id="basic-addon1">Parts</span>
                     </div>
                 </div>
 
