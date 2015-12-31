@@ -101,7 +101,7 @@ class IndexController(object):
             for executable in executables.items():
                 if filtered_exec.command == executable[0]:
                     filtered_exec.cores = executable[1].resources.cores;
-                    filtered_exec.ram = executable[1].resources.ram;
+                    filtered_exec.ram = int(executable[1].resources.ram);
                     filtered_exec.walltime = executable[1].resources.walltime;
                     for file in executable[1].outputs:
                         filtered_exec.outputfiles.append((file.name, 50))

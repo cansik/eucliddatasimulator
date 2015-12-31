@@ -101,7 +101,8 @@ def generate():
         stubinfo.cores = int(request.form[stubinfo.command+'_cores'])
         stubinfo.ram = int(request.form[stubinfo.command+'_ram'])
         stubinfo.walltime = controller.parseWallTime(request.form[stubinfo.command+'_walltime'])    #Parsing the walltime to ensure right format
-        stubinfo.split_parts = int(request.form[stubinfo.command+'_splits'])
+        if stubinfo.isParallelSplit:
+            stubinfo.split_parts = int(request.form[stubinfo.command+'_splits'])
 
         tempTupleList = list()
         for outputfile in stubinfo.outputfiles:
