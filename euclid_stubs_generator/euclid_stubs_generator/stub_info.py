@@ -13,7 +13,7 @@ class StubInfo:
         self.nodeType = nodeType
         self.isParallelSplit = isParallelSplit
         self.cores = int()
-        self.ram = float()
+        self.ram = int()
         self.walltime = int()
         self.outputfiles = list()
         self.inputfiles = list()
