@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import os
 import pickle
@@ -28,10 +29,12 @@ workdir = ''
 file_data_dir = 'data'
 extension = '.dat'
 
+
 # dummy class for loading stub info
 class Struct:
     def __init__(self, **entries):
         self.__dict__.update(entries)
+
 
 class ResourceUser(object):
     def __init__(self):
@@ -129,7 +132,7 @@ class ResourceUser(object):
     @staticmethod
     def __cpu_calculator():
         while True:
-            for k in range(1024 * 1024):
+            for k in xrange(1024 * 1024):
                 r = random.randint(0, 9)
                 i = r + r
 
@@ -204,18 +207,26 @@ def read_input_files():
     for input_name, rel_path in inputs.items():
         absolute_path = os.path.join(workdir, rel_path)
 
-        # read xml file
-        xmldoc = minidom.parse(absolute_path)
-        file_list = xmldoc.getElementsByTagName('FileName')
-        file_names = map(lambda e: e.firstChild.data, file_list)
+        # read xml file if is valid
+        try:
+            xmldoc = minidom.parse(absolute_path)
+            file_list = xmldoc.getElementsByTagName('FileName')
+            file_names = map(lambda e: e.firstChild.data, file_list)
 
-        for file_name in file_names:
-            data_path = os.path.join(workdir, file_data_dir, file_name)
-            data = ''
-            with open(data_path, mode='rb') as blob:
+            for file_name in file_names:
+                data_path = os.path.join(workdir, file_data_dir, file_name)
+                data = ''
+                with open(data_path, mode='rb') as blob:
+                    data = blob.read()
+
+                print("read %s (%s bytes)" % (file_name, sys.getsizeof(data)))
+                junk_files.append(data)
+        except Exception, e:
+            # read just the file as junk
+            with open(absolute_path, mode='rb') as blob:
                 data = blob.read()
 
-            print("read %s (%s bytes)" % (file_name, sys.getsizeof(data)))
+            print("read blob %s (%s bytes)" % (absolute_path, sys.getsizeof(data)))
             junk_files.append(data)
 
 
@@ -290,7 +301,6 @@ def write_split_output():
     # write list file
     with open(list_path, 'w') as outfile:
         outfile.write(pickle.dumps(split_part_list))
-
 
 
 def create_xml_output(product_id, file_list):

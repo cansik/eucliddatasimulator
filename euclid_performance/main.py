@@ -4,9 +4,9 @@ __author__ = 'cansik'
 
 user = RessourceUser()
 
-user.use_cpu(4)
-user.use_memory(10000)
-user.use_io(1000, 2)
+user.use_cpu(8)
+user.use_memory(0)
+user.use_io(0, 0)
 
-user.start(20)
+user.start(120)
 print("finished!")

@@ -102,7 +102,7 @@ class RessourceUser(object):
     @staticmethod
     def __cpu_calculator():
         while True:
-            for k in range(1024 * 1024):
+            for k in xrange(1024 * 1024):
                 r = random.randint(0, 9)
                 i = r + r
 
