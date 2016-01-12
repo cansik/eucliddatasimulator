@@ -25,3 +25,6 @@ class StubInfo:
 
     def __hash__(self):
         return hash(self.command)
+
+    def walltime_ui_representation(self):
+        return "00:0"+str(int(self.walltime))+":00"

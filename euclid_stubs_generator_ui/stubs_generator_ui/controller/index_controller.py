@@ -102,7 +102,7 @@ class IndexController(object):
                 if filtered_exec.command == executable[0]:
                     filtered_exec.cores = executable[1].resources.cores;
                     filtered_exec.ram = int(executable[1].resources.ram);
-                    filtered_exec.walltime = executable[1].resources.walltime;
+                    filtered_exec.walltime = executable[1].resources.walltime /100; #convert to minutes with / 100
                     for file in executable[1].outputs:
                         filtered_exec.outputfiles.append((file.name, 50))
                     for file in executable[1].inputs:
