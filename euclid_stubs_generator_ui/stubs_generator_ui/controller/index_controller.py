@@ -140,6 +140,14 @@ class IndexController(object):
         with open(os.path.join(outputFolder, 'resources.txt'), 'w') as outfile:
             json.dump(computingResources, outfile)
 
+    def writePortMapping(self, input_files, outputFolder):
+        output_text = "workdir=test_run\nlogdir=logdir\n"
+        for k in input_files.keys():
+            output_text += "%s=%s.dat\n" % (k, k)
+
+        with open(os.path.join(outputFolder, 'portmapping.txt'), 'w') as outfile:
+            outfile.write(output_text)
+
     def createZip(self, outputFolder):
         memory_file = BytesIO()
 
