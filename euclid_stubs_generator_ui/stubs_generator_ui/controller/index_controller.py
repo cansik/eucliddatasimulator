@@ -7,7 +7,6 @@ import time
 from euclid_stubs_generator.stub_info import StubInfo, NodeType
 from euclidwf.framework.graph_builder import build_graph
 from euclidwf.framework.graph_tasks import ExecTask, ParallelSplitTask, NestedGraphTask
-from euclidwf.framework.taskdefs import Executable
 from flask import json
 from pydron.dataflow.graph import Graph, _Connection, START_TICK
 
@@ -102,7 +101,7 @@ class IndexController(object):
                 if filtered_exec.command == executable[0]:
                     filtered_exec.cores = executable[1].resources.cores
                     filtered_exec.ram = int(executable[1].resources.ram)
-                    filtered_exec.walltime = executable[1].resources.walltime #/100; #convert to minutes with / 100
+                    filtered_exec.walltime = executable[1].resources.walltime
                     for file in executable[1].outputs:
                         filtered_exec.outputfiles.append((file.name, 50))
                     for file in executable[1].inputs:

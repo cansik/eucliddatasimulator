@@ -100,7 +100,7 @@ def generate():
     for stubinfo in execs:
         stubinfo.cores = int(request.form[stubinfo.command+'_cores'])
         stubinfo.ram = int(request.form[stubinfo.command+'_ram'])
-        stubinfo.walltime = controller.parseWallTime(request.form[stubinfo.command+'_walltime'])    #Parsing the walltime to ensure right format
+        stubinfo.walltime = controller.parseWallTime(request.form[stubinfo.command+'_walltimedisplay'])    #Parsing the walltime to ensure right format
         if stubinfo.isParallelSplit:
             stubinfo.split_parts = int(request.form[stubinfo.command+'_splits'])
 

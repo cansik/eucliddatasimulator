@@ -173,6 +173,7 @@
 
             });
 
+            // Show / Hide Output for each executable
             {% for stubinfo in executables %}
                 $('#{{stubinfo.command}}_button').click(function () {
                     if($("#{{stubinfo.command}}_button").text() == "Show")
@@ -186,13 +187,18 @@
 
         $(document).ready(function () {
 
+            //Convert Default Time to hours, mins and sec
             {% for stubinfo in executables %}
 
                 var resraw = $('#{{stubinfo.command}}_walltimeraw').val();
                 var res = resraw.split(".");
                 var minutes = parseInt(res[0]);
-                var seconds = parseInt(res[1]);
-                var hours = parseInt(minutes / 60);
+                var seconds = 0;
+                if(res.length > 1)
+                {seconds = parseInt(res[1]);}
+                var hours = 0;
+                if(minutes != 0)
+                {hours = parseInt(minutes / 60);}
                 var displayminutes = minutes % 60;
                 var displayseconds = seconds*6;
 
@@ -200,6 +206,7 @@
 
             {% endfor %}
 
+            //Pad left zeros if needed
             function leadingZeros(number)
             {
                 if ((""+number).length == 1) return "0"+number;
