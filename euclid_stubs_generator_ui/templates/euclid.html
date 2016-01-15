@@ -165,7 +165,7 @@
 
 <script type="text/javascript">
     $(function () {
-
+        $(document).ready(function () {
             // Show / Hide Output for each executable
             {% for stubinfo in executables %}
                 $('#{{stubinfo.command}}_button').click(function () {
