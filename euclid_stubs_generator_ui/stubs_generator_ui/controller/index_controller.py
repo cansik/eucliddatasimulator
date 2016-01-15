@@ -7,7 +7,6 @@ import time
 from euclid_stubs_generator.stub_info import StubInfo, NodeType
 from euclidwf.framework.graph_builder import build_graph
 from euclidwf.framework.graph_tasks import ExecTask, ParallelSplitTask, NestedGraphTask
-from euclidwf.framework.taskdefs import Executable
 from flask import json
 from pydron.dataflow.graph import Graph, _Connection, START_TICK
 
@@ -100,9 +99,9 @@ class IndexController(object):
         for filtered_exec in filtered_execs:
             for executable in executables.items():
                 if filtered_exec.command == executable[0]:
-                    filtered_exec.cores = executable[1].resources.cores;
-                    filtered_exec.ram = int(executable[1].resources.ram);
-                    filtered_exec.walltime = executable[1].resources.walltime;
+                    filtered_exec.cores = executable[1].resources.cores
+                    filtered_exec.ram = int(executable[1].resources.ram)
+                    filtered_exec.walltime = executable[1].resources.walltime
                     for file in executable[1].outputs:
                         filtered_exec.outputfiles.append((file.name, 50))
                     for file in executable[1].inputs:
@@ -148,6 +147,7 @@ class IndexController(object):
         with open(os.path.join(outputFolder, 'portmapping.txt'), 'w') as outfile:
             outfile.write(output_text)
 
+    # This method zips the given folder and return it
     def createZip(self, outputFolder):
         memory_file = BytesIO()
 
@@ -156,6 +156,7 @@ class IndexController(object):
 
         with ChangeDir(base_dir):
             with zipfile.ZipFile(memory_file, 'w') as zf:
+                # Go through each folder / subdir
                 for dirname, subdirs, files in os.walk(target_dir):
                     zf.write(dirname)
 

@@ -13,7 +13,9 @@ from main import app
 
 __author__ = 'cansik'
 
+# This is the path to the package definitions
 packageDefs = '../euclidwf_examples/packages/pkgdefs'
+# This is the path to the outputfolder
 outputFolder = 'temp/'
 
 # This is the path to the upload directory
@@ -59,12 +61,15 @@ def upload():
 # an image, that image is going to be show after the upload
 @app.route('/overview/<filename>')
 def uploaded_file(filename):
+
+    #Load all Package Definitions from the packageDef folder
     executables = exec_loader.get_all_executables(packageDefs)
 
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
     pydron_graph = controller.build_graph_from_file(file_path)
 
+    # Following uncommented code could plot the pydron graph:
     # from euclidwf.utilities import visualizer
     # visualizer.visualize_graph(pydron_graph)
 
@@ -74,7 +79,7 @@ def uploaded_file(filename):
                                                               executables)  # dict({(k, v) for k, v in executables.items() if k in task_names})
     controller.setDefaultComputingResources(executables, filtered_execs)
 
-    # set session variables
+    # set session variables to use them in the generate method
     session['files'] = files
     session['pipeline_name'] = os.path.splitext(filename)[0]
     session['execs'] = pickle.dumps(filtered_execs)
@@ -84,11 +89,12 @@ def uploaded_file(filename):
 
 @app.route('/generate', methods=['POST'])
 def generate():
-    # data = shelve.open(os.path.join(outputFolder,'shelvedata'))
-    # temp = data[session['uid']]
+
+    #data = shelve.open(os.path.join(outputFolder,'shelvedata'))
+    #temp = data[session['uid']]
     pipeline_name = session['pipeline_name']
 
-    # filterd_executables = pickle.loads(temp)
+    #filterd_executables = pickle.loads(temp)
 
     execs = pickle.loads(session['execs'])
 
@@ -97,12 +103,11 @@ def generate():
     mkdir_p(pipeline_output)
 
     for stubinfo in execs:
-        stubinfo.cores = int(request.form[stubinfo.command + '_cores'])
-        stubinfo.ram = int(request.form[stubinfo.command + '_ram'])
-        stubinfo.walltime = controller.parseWallTime(
-                request.form[stubinfo.command + '_walltime'])  # Parsing the walltime to ensure right format
+        stubinfo.cores = int(request.form[stubinfo.command+'_cores'])
+        stubinfo.ram = int(request.form[stubinfo.command+'_ram'])
+        stubinfo.walltime = controller.parseWallTime(request.form[stubinfo.command+'_walltimedisplay'])    #Parsing the walltime to ensure right format
         if stubinfo.isParallelSplit:
-            stubinfo.split_parts = int(request.form[stubinfo.command + '_splits'])
+            stubinfo.split_parts = int(request.form[stubinfo.command+'_splits'])
 
         tempTupleList = list()
         for outputfile in stubinfo.outputfiles:
@@ -112,10 +117,10 @@ def generate():
     # Set Pipeline Input Size
     files = session['files']
     """:type files: dict"""
-    for (key, value) in files.items():
+    for (key,value) in files.items():
         files[key] = int(request.form[key])
 
-    on = 'pipelineInputCheckBox' in request.form
+    on =  'pipelineInputCheckBox' in request.form
 
     StubsGenerator(os.path.join(pipeline_output, "bin")).generate_stubs(execs)
     MockGenerator(pipeline_output).generate_script(files)
@@ -131,6 +136,7 @@ def generate():
     # remove output folder
     shutil.rmtree(pipeline_output)
 
+    #Send the zipped folder to the user
     return send_file(memory_file, attachment_filename='%s.zip' % pipeline_name, as_attachment=True)
 
 
