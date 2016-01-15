@@ -8,7 +8,7 @@ from euclid_stubs_generator.stubs_generator import StubsGenerator
 from euclidwf.utilities import exec_loader
 from flask import render_template, request, url_for, session, send_file
 from werkzeug.utils import secure_filename, redirect
-from controller.index_controller import IndexController
+from stubs_generator_ui.controller.index_controller import IndexController
 from main import app
 
 __author__ = 'cansik'

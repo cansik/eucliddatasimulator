@@ -11,7 +11,7 @@ from euclidwf.framework.taskdefs import Executable
 from flask import json
 from pydron.dataflow.graph import Graph, _Connection, START_TICK
 
-from utils.context_manager import ChangeDir
+from stubs_generator_ui.utils.context_manager import ChangeDir
 
 
 class IndexController(object):

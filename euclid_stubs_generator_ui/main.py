@@ -1,4 +1,4 @@
-from stubs_generator_server import app
+from stubs_generator_ui.stubs_generator_server import app
 from stubs_generator_ui import config
 
 __author__ = 'cansik'

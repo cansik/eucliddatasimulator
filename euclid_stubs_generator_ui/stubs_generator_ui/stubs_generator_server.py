@@ -11,4 +11,4 @@ app.config['SECRET_KEY'] = 'secret!'
 CORS(app)
 
 # import routes
-import routes.index
+import stubs_generator_ui.routes.index
