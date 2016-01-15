@@ -103,15 +103,15 @@ def generate():
     mkdir_p(pipeline_output)
 
     for stubinfo in execs:
-        stubinfo.cores = int(request.form[stubinfo.command+'_cores'])
-        stubinfo.ram = int(request.form[stubinfo.command+'_ram'])
+        stubinfo.cores = int(float(request.form[stubinfo.command+'_cores']))
+        stubinfo.ram = int(float(request.form[stubinfo.command+'_ram']))
         stubinfo.walltime = controller.parseWallTime(request.form[stubinfo.command+'_walltimedisplay'])    #Parsing the walltime to ensure right format
         if stubinfo.isParallelSplit:
-            stubinfo.split_parts = int(request.form[stubinfo.command+'_splits'])
+            stubinfo.split_parts = int(float(request.form[stubinfo.command+'_splits']))
 
         tempTupleList = list()
         for outputfile in stubinfo.outputfiles:
-            tempTupleList.append((outputfile[0], int(request.form['%s_%s_size' % (stubinfo.command, outputfile[0])])))
+            tempTupleList.append((outputfile[0], int(float(request.form['%s_%s_size' % (stubinfo.command, outputfile[0])]))))
         stubinfo.outputfiles = tempTupleList
 
     # Set Pipeline Input Size
