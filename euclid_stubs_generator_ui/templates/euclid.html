@@ -52,12 +52,12 @@
     <div class="container containertop">
         <div class="checkbox">
             <label>
-                <input type="checkbox" name="pipelineInputCheckBox" id="pipelineInputCheckBox"> Generate Pipeline Input Mocks
+                <input type="checkbox" name="pipelineInputCheckBox" id="pipelineInputCheckBox"> Generate data files for Input-Mocks
             </label>
         </div>
     </div>
 
-    <div class="container containertop" id="PipelineInputTable" style="display: none">
+    <div class="container containertop" id="PipelineInputTable">
 
         <div class="row rowheader norowmargin">
             <div class="col-xs-6"><strong>Input Name</strong></div>
@@ -165,13 +165,6 @@
 
 <script type="text/javascript">
     $(function () {
-
-        // Show / Hide Pipeline Input
-        $(document).ready(function () {
-            $('#pipelineInputCheckBox').change(function () {
-                $("#PipelineInputTable").toggle("blind");
-
-            });
 
             // Show / Hide Output for each executable
             {% for stubinfo in executables %}
