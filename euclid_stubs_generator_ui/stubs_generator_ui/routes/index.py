@@ -13,7 +13,9 @@ from main import app
 
 __author__ = 'cansik'
 
+# This is the path to the package definitions
 packageDefs = '../euclidwf_examples/packages/pkgdefs'
+# This is the path to the outputfolder
 outputFolder = 'temp/'
 
 # This is the path to the upload directory
@@ -59,12 +61,15 @@ def upload():
 # an image, that image is going to be show after the upload
 @app.route('/overview/<filename>')
 def uploaded_file(filename):
+
+    #Load all Package Definitions from the packageDef folder
     executables = exec_loader.get_all_executables(packageDefs)
 
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
     pydron_graph = controller.build_graph_from_file(file_path)
 
+    # Following uncommented code could plot the pydron graph:
     # from euclidwf.utilities import visualizer
     # visualizer.visualize_graph(pydron_graph)
 
@@ -74,7 +79,7 @@ def uploaded_file(filename):
                                                               executables)  # dict({(k, v) for k, v in executables.items() if k in task_names})
     controller.setDefaultComputingResources(executables, filtered_execs)
 
-    # set session variables
+    # set session variables to use them in the generate method
     session['files'] = files
     session['pipeline_name'] = os.path.splitext(filename)[0]
     session['execs'] = pickle.dumps(filtered_execs)
@@ -131,6 +136,7 @@ def generate():
     # remove output folder
     shutil.rmtree(pipeline_output)
 
+    #Send the zipped folder to the user
     return send_file(memory_file, attachment_filename='%s.zip' % pipeline_name, as_attachment=True)
 
 

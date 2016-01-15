@@ -147,6 +147,7 @@ class IndexController(object):
         with open(os.path.join(outputFolder, 'portmapping.txt'), 'w') as outfile:
             outfile.write(output_text)
 
+    # This method zips the given folder and return it
     def createZip(self, outputFolder):
         memory_file = BytesIO()
 
@@ -155,6 +156,7 @@ class IndexController(object):
 
         with ChangeDir(base_dir):
             with zipfile.ZipFile(memory_file, 'w') as zf:
+                # Go through each folder / subdir
                 for dirname, subdirs, files in os.walk(target_dir):
                     zf.write(dirname)
 
