@@ -22,4 +22,17 @@ Uses computer resources as defined:
 - IO Operations
 - RAM Usage
 
+```python
+from RessourceUser import RessourceUser
+
+user = RessourceUser()
+
+user.use_cpu(0)
+user.use_memory(12000)
+user.use_io(0, 0)
+
+user.start(120)
+print("finished!")
+```
+
 *IP5 Project of Andreas Lüscher and Florian Bruggisser*
